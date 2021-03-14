@@ -100,10 +100,6 @@ public class UserController {
             return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
         }
 
-
-
-
-
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
@@ -112,7 +108,7 @@ public class UserController {
         }
     }
 
-    /*
+
     @ResponseBody
     @PostMapping("/login") //마찬가지로 아무것도 없는 것은 post방식으로 /app/users 를 사용하겠다는 의미
     public BaseResponse<PostUserLoginRes> loginUser(@RequestBody PostUserLoginReq postUserLoginReq) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
@@ -129,7 +125,7 @@ public class UserController {
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
-    } */
+    }
 
 
 }

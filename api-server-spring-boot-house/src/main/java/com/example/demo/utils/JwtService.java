@@ -29,9 +29,11 @@ public class JwtService {
         return Jwts.builder()
                 .claim("userIdx",userIdx)
                 .setIssuedAt(now)
+                .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365)))   // 유효기간 1년설정. 개발단계에서는 길게, 실제 배포에서는 수정하기
                 .signWith(SignatureAlgorithm.HS256, Secret.JWT_SECRET_KEY)
                 .compact();
     }
+
 
     /*
     Header에서 X-ACCESS-TOKEN 으로 JWT 추출

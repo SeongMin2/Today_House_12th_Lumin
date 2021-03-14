@@ -68,4 +68,40 @@ public class UserDao {
 
 
 
+    public PostUserLoginPWRes checkAccount(String email){
+        return this.jdbcTemplate.queryForObject("select emailId, pw, idx from User where emailId=?",
+                (rs, rowNum) -> new PostUserLoginPWRes(
+                        rs.getString("emailId"),
+                        rs.getString("pw"),
+                        rs.getInt("idx")),
+                email);
+    }
+
+
+    public int recordLog(int userIdx,String status){
+        this.jdbcTemplate.update("insert into LogHistory (createdAt, userIdx,status ) VALUES (NOW(),?,?)",
+                userIdx,status
+        );
+        return 1;
+    }
+
+
+
+    public String checkLog(int userIdx){
+        return this.jdbcTemplate.queryForObject("select status from LogHistory\n" +
+                        "where idx=(select max(idx) from (select idx from LogHistory where userIdx=?) a)",
+                String.class,
+                userIdx);
+    }
+
+
+
+    public int checkLogExist(int userIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select idx from LogHistory where userIdx=?) as exist",
+                int.class,
+                userIdx);
+    }
+
+
+
 }

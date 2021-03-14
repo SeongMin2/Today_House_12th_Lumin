@@ -46,6 +46,8 @@ public enum BaseResponseStatus {
 
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
+    POST_USERS_NONEXIST_ACCOUNT(false,3014,"아이디 또는 비밀번호가 잘못되었습니다."),
+    ALREADY_LOGGED(false,3015,"이미 로그인되어 있습니다"),
 
 
     /**
