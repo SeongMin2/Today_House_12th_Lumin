@@ -43,23 +43,33 @@ public class UserService {
     //POST
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
-        if(userProvider.checkEmail(postUserReq.getEmail()) ==1){
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+        if(postUserReq.getPassword().equals(postUserReq.getPasswordCheck())){
+            if(userProvider.checkName(postUserReq.getNickName())==1){
+                throw new BaseException(POST_USER_EXISTS_NAME);
+            }
+
+            if(userProvider.checkEmailId(postUserReq.getEmailId()) ==1){
+                throw new BaseException(POST_USERS_EXISTS_EMAIL);
+            }
+
+            String pwd;
+            try{
+                //암호화
+                pwd = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(postUserReq.getPassword());
+                postUserReq.setPassword(pwd);
+            } catch (Exception ignored) {
+                throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
+            }
+
+            int userIdx = userDao.createUser(postUserReq);
+
+            //jwt발급
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostUserRes(jwt,userIdx);
+        }
+        else{
+            throw new BaseException(PASSWORD_CONFIRM_ERROR);
         }
 
-        String pwd;
-        try{
-            //암호화
-            pwd = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(postUserReq.getPassword());
-            postUserReq.setPassword(pwd);
-        } catch (Exception ignored) {
-            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
-        }
-
-        int userIdx = userDao.createUser(postUserReq);
-
-        //jwt발급
-        String jwt = jwtService.createJwt(userIdx);
-        return new PostUserRes(jwt,userIdx);
     }
 }

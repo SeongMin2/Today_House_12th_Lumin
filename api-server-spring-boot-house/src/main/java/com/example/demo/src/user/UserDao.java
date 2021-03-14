@@ -43,14 +43,24 @@ public class UserDao {
 
 
     public int createUser(PostUserReq postUserReq){
-        this.jdbcTemplate.update("insert into UserInfo (userName, ID, password, email) VALUES (?,?,?,?)",
-                new Object[]{postUserReq.getUserName(), postUserReq.getId(), postUserReq.getPassword(), postUserReq.getEmail(),}
+        this.jdbcTemplate.update("insert into User (createdAt, name, emailId, pw, mandatoryConsent,optionalConsent ) VALUES (NOW(),?,?,?,?,?)",
+                new Object[]{postUserReq.getNickName(), postUserReq.getEmailId(), postUserReq.getPassword(), postUserReq.getMandatoryConsent(),postUserReq.getOptionalConsent(),}
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
 
+
+
+    public int checkName(String name){
+        return this.jdbcTemplate.queryForObject("select exists(select name from User where name = ?)",
+                int.class,
+                name);
+    }
+
+
+
     public int checkEmail(String email){
-        return this.jdbcTemplate.queryForObject("select exists(select email from UserInfo where email = ?)",
+        return this.jdbcTemplate.queryForObject("select exists(select emailId from User where emailId = ?)",
                 int.class,
                 email);
 

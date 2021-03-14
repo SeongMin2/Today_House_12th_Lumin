@@ -69,6 +69,7 @@ public class UserController {
         return new BaseResponse<>(getUserRes);
     }
 
+
     /**
      * 회원가입 API
      * [POST] /users
@@ -78,13 +79,15 @@ public class UserController {
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) throws BaseException {
-        if(postUserReq.getEmail() == null){
+        if(postUserReq.getEmailId() == null){
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현
-        if(!isRegexEmail(postUserReq.getEmail())){
+        if(!isRegexEmail(postUserReq.getEmailId())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+
+
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);

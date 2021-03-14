@@ -47,7 +47,13 @@ public class UserProvider {
 
 
 
-    public int checkEmail(String email){
+    public int checkName(String name){
+        return userDao.checkName(name);
+    }
+
+
+
+    public int checkEmailId(String email){
         return userDao.checkEmail(email);
     }
 
