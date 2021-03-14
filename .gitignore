@@ -224,4 +224,6 @@ $RECYCLE.BIN/
 ### Project ###
 api-server-spring-boot-house/src/main/java/com/example/demo/config/secret/Secret.java
 
+api-server-spring-boot-house/src/main/resources/application.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/java,windows,intellij,eclipse
