@@ -98,4 +98,18 @@ public class UserService {
         return new PostUserLoginRes(jwt,userIdx);
     }
 
+
+
+    public PatchUserLogoutRes patchLogout(int userIdx) throws BaseException {
+        if(userProvider.checkLog(userIdx).equals("I")){
+            PatchUserLogoutRes patchUserLogoutRes = userDao.patchLogout(userIdx);
+            return patchUserLogoutRes;
+        }
+        else{
+            throw new BaseException(ALREADY_LOGOUT);
+        }
+    }
+
+
+
 }

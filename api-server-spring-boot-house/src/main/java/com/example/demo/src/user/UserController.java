@@ -14,6 +14,7 @@ import java.util.List;
 
 
 import static com.example.demo.config.BaseResponseStatus.*;
+import static com.example.demo.config.BaseResponseStatus.USERS_INVALID_ACCESS;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController
@@ -101,7 +102,13 @@ public class UserController {
         }
 
         try{
+            String forLoginPw = postUserReq.getPassword();
+
             PostUserRes postUserRes = userService.createUser(postUserReq);
+
+            PostUserLoginReq postUserLoginReq = new PostUserLoginReq(postUserReq.getEmailId(),forLoginPw);
+            PostUserLoginRes postUserLoginRes = userService.loginUser(postUserLoginReq);
+
             return new BaseResponse<>(postUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
@@ -126,6 +133,35 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+
+    @ResponseBody
+    @PatchMapping ("/logout/{userIdx}")
+    public BaseResponse<PatchUserLogoutRes> logoutUser(@PathVariable("userIdx")String userIdx) throws BaseException{
+        int userIdxx=0;
+        try{
+            userIdxx = Integer.parseInt(userIdx);
+        } catch(NumberFormatException e){ }
+
+
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else if(jwtService.getUserIdx()==userIdxx){
+                PatchUserLogoutRes patchUserLogoutRes = userService.patchLogout(userIdxx);
+                return new BaseResponse<>(patchUserLogoutRes);
+            }
+            else{
+                return new BaseResponse<>(USERS_INVALID_ACCESS);
+            }
+        }catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+    }
+
+
 
 
 }

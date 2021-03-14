@@ -104,4 +104,23 @@ public class UserDao {
 
 
 
+    public PatchUserLogoutRes patchLogout(int userIdx){
+        this.jdbcTemplate.update("update LogHistory set status='O', updatedAt =NOW()\n" +
+                        "where idx=(select max(idx) from (select idx from LogHistory where userIdx=?) a);",
+                userIdx
+        );
+        return this.jdbcTemplate.queryForObject("select LogHistory.idx,userIdx,LogHistory.status,name from LogHistory\n" +
+                        "inner join User\n" +
+                        "on User.idx=LogHistory.userIdx\n" +
+                        "where LogHistory.idx=(select max(idx) from (select idx from LogHistory where userIdx=?) a)",
+                (rs, rowNum) -> new PatchUserLogoutRes(
+                        rs.getInt("idx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("status"),
+                        rs.getString("name")),
+                userIdx);
+    }
+
+
+
 }

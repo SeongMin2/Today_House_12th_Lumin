@@ -34,6 +34,7 @@ public enum BaseResponseStatus {
     INSUFFICIENT_PW_RANGE(false,2020,"비밀번호를 8자 이상 입력해주세요."),
     EXCEED_PW_RANGE(false,2021,"비밀번호를 16자 이하로 입력해주세요."),
     INSUFFICIENT_NAME_RANGE(false,2022,"별명을 2~15자 내로 입력해주세요."),
+    USERS_INVALID_ACCESS(false,2023,"본인만 접근 가능합니다."),
 
 
 
@@ -48,6 +49,7 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     POST_USERS_NONEXIST_ACCOUNT(false,3014,"아이디 또는 비밀번호가 잘못되었습니다."),
     ALREADY_LOGGED(false,3015,"이미 로그인되어 있습니다"),
+    ALREADY_LOGOUT(false,3016,"이미 로그아웃되어 있습니다."),
 
 
     /**
