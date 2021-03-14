@@ -79,13 +79,29 @@ public class UserController {
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) throws BaseException {
-        if(postUserReq.getEmailId() == null){
-            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        //req에 입력하지 않은 경우
+        if(postUserReq.getEmailId() == null || postUserReq.getPassword()==null || postUserReq.getPasswordCheck()==null || postUserReq.getNickName()==null || postUserReq.getMandatoryConsent()==null){
+            return new BaseResponse<>(POST_USERS_EMPTY);
         }
+
         //이메일 정규표현
         if(!isRegexEmail(postUserReq.getEmailId())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+
+        if(postUserReq.getPassword().length()<8){
+            return new BaseResponse<>(INSUFFICIENT_PW_RANGE);
+        }
+        if(postUserReq.getPassword().length()>16){
+            return new BaseResponse<>(EXCEED_PW_RANGE);
+        }
+
+        if(postUserReq.getNickName().length()<2 || postUserReq.getNickName().length()>8){
+            return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
+        }
+
+
+
 
 
         try{
@@ -95,4 +111,25 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /*
+    @ResponseBody
+    @PostMapping("/login") //마찬가지로 아무것도 없는 것은 post방식으로 /app/users 를 사용하겠다는 의미
+    public BaseResponse<PostUserLoginRes> loginUser(@RequestBody PostUserLoginReq postUserLoginReq) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
+        if(postUserLoginReq.getEmailId() == null){   //validation처리
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        //이메일 정규표현     // 이건 5주차 skip
+        if(!isRegexEmail(postUserLoginReq.getEmailId())){   // 형식적 validation
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        try{
+            PostUserLoginRes postUserLoginRes = userService.loginUser(postUserLoginReq);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
+            return new BaseResponse<>(postUserLoginRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    } */
+
+
 }

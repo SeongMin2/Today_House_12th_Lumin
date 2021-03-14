@@ -25,11 +25,16 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
 
     // [POST] /users
+    POST_USERS_EMPTY(false,2014,"아직 입력하지 않은 필수항목이 있습니다."),
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     PASSWORD_CONFIRM_ERROR(false,2018,"두 비밀번호가 일치하지 않습니다."),
     POST_USER_EXISTS_NAME(false,2019,"사용 중인 별명입니다."),
+    INSUFFICIENT_PW_RANGE(false,2020,"비밀번호를 8자 이상 입력해주세요."),
+    EXCEED_PW_RANGE(false,2021,"비밀번호를 16자 이하로 입력해주세요."),
+    INSUFFICIENT_NAME_RANGE(false,2022,"별명을 2~15자 내로 입력해주세요."),
+
 
 
 
