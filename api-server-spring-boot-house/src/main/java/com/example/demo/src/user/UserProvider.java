@@ -101,9 +101,18 @@ public class UserProvider {
         return logStatus;
     }
 
+
+
     public int checkLogExist(int userIdx){
         int exist = userDao.checkLogExist(userIdx);
         return exist;
+    }
+
+
+
+    public List<GetNameListRes> getNameList(String name){
+        List<GetNameListRes> getNameListRes = userDao.getNameList(name);
+        return getNameListRes;
     }
 
 

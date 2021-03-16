@@ -1,1 +1,8 @@
 -업데이트
+2021.03.17(루민)
+BaseResponse부분에 개인적으로 사용할 새로운 형태를 추가했습니다.
+public BaseResponse(BaseResponseStatus status,String recommandName)
+GetCheckEmailReq,GetCheckEmailRes,GetCheckNameReq,GetCheckNameRes,GetNameListRes를 추가하였고
+UserController, UserDao,UserProvider을 추가 및 수정하였습니다.
+
+

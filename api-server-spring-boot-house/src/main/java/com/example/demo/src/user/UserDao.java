@@ -104,6 +104,14 @@ public class UserDao {
 
 
 
+    public List<GetNameListRes> getNameList (String name){
+        return this.jdbcTemplate.query("select name from User where name like '"+name+"%'",
+                (rs, rowNum) -> new GetNameListRes(
+                        rs.getString("name")));
+    }
+
+
+
     public PatchUserLogoutRes patchLogout(int userIdx){
         this.jdbcTemplate.update("update LogHistory set status='O', updatedAt =NOW()\n" +
                         "where idx=(select max(idx) from (select idx from LogHistory where userIdx=?) a);",

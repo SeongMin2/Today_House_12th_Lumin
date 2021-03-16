@@ -46,15 +46,16 @@ public class UserController {
      * 회원 번호 및 이메일 검색 조회 API
      * [GET] /users?userIdx= && Email=
      * @return BaseResponse<List<GetUserRes>>
+     *
      */
-    //Query String
+  /*  //Query String
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
     public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
         // Get Users
         List<GetUserRes> getUsersRes = userProvider.getUsers(Email);
         return new BaseResponse<>(getUsersRes);
-    }
+    } */
 
     /**
      * 회원 1명 조회 API
@@ -62,13 +63,14 @@ public class UserController {
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
+    /*
     @ResponseBody
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
     public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
         // Get Users
         GetUserRes getUserRes = userProvider.getUser(userIdx);
         return new BaseResponse<>(getUserRes);
-    }
+    } */
 
 
     /**
@@ -97,7 +99,7 @@ public class UserController {
             return new BaseResponse<>(EXCEED_PW_RANGE);
         }
 
-        if(postUserReq.getNickName().length()<2 || postUserReq.getNickName().length()>8){
+        if(postUserReq.getNickName().length()<2 || postUserReq.getNickName().length()>15){
             return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
         }
 
@@ -114,6 +116,67 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+    @ResponseBody
+    @GetMapping("/email-check")
+    public BaseResponse<GetCheckEmailRes> checkEmail(@RequestBody GetCheckEmailReq getCheckEmailReq) throws BaseException {
+        // Get Users
+        GetCheckEmailRes getCheckEmailRes = new GetCheckEmailRes();
+        if(getCheckEmailReq.getNothing()==null){
+            getCheckEmailReq.setNothing("n");
+        }
+        int result = userProvider.checkEmailId(getCheckEmailReq.getEmailId());
+
+        if(!isRegexEmail(getCheckEmailReq.getEmailId())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+
+        if(result==1){
+            return new BaseResponse<>(POST_USERS_EXISTS_EMAIL);
+        }
+
+        else{
+            return new BaseResponse<>(getCheckEmailRes);
+        }
+    }
+
+
+
+
+    @ResponseBody
+    @GetMapping("/nickname-check")
+    public BaseResponse<GetCheckNameRes> checkName(@RequestBody GetCheckNameReq getCheckNameReq) throws BaseException {
+        // Get Users
+        GetCheckNameRes getCheckNameRes = new GetCheckNameRes();
+        if(getCheckNameReq.getNothing()==null){
+            getCheckNameReq.setNothing("n");
+        }
+        int result = userProvider.checkName(getCheckNameReq.getNickname());
+        if(getCheckNameReq.getNickname().length()<2){
+            return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
+        }
+
+        if(result==1){
+            List<GetNameListRes> getNameListRes = userProvider.getNameList(getCheckNameReq.getNickname());
+            int num = getNameListRes.size();
+            num=num+1;
+            String recommandName = getCheckNameReq.getNickname()+num;
+            return new BaseResponse<>(POST_USER_EXISTS_NAME,recommandName);
+        }
+
+        if(getCheckNameReq.getNickname().length()>15){
+            return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
+        }
+
+        else{
+            return new BaseResponse<>(getCheckNameRes);
+        }
+    }
+
+
+
+
 
 
     @ResponseBody

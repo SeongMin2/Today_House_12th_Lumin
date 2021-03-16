@@ -20,9 +20,9 @@ public class BaseResponse<T> {
     private final String message;
     private final int code;
   /*  @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<String> messages= new ArrayList<>();
+    private List<String> messages= new ArrayList<>();*/
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<Integer> codes= new ArrayList<>();   */
+    private String recommandName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
@@ -40,13 +40,12 @@ public class BaseResponse<T> {
         this.message = status.getMessage();
         this.code = status.getCode();
     }
-/*
-    public BaseResponse(BaseResponseStatus status,int num) {
+
+    public BaseResponse(BaseResponseStatus status,String recommandName) {
         this.isSuccess = status.isSuccess();
-        this.message = null;
-        this.code = 0;
-        codes.add(status.getCode());
-        messages.add(status.getMessage());
-    } */
+        this.message = status.getMessage();
+        this.code = status.getCode();
+        this.recommandName=recommandName;
+    }
 }
 
