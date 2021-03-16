@@ -5,4 +5,7 @@ public BaseResponse(BaseResponseStatus status,String recommandName)
 GetCheckEmailReq,GetCheckEmailRes,GetCheckNameReq,GetCheckNameRes,GetNameListRes를 추가하였고
 UserController, UserDao,UserProvider을 추가 및 수정하였습니다.
 
+2021.03.17(루민)
+userController 부분에서 logout부분을 수정해주었습니다.
+
 

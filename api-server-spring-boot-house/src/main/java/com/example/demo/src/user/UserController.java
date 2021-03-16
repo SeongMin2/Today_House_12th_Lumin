@@ -200,25 +200,27 @@ public class UserController {
 
 
     @ResponseBody
-    @PatchMapping ("/logout/{userIdx}")
-    public BaseResponse<PatchUserLogoutRes> logoutUser(@PathVariable("userIdx")String userIdx) throws BaseException{
+    @PatchMapping ("/logout")
+    public BaseResponse<PatchUserLogoutRes> logoutUser() throws BaseException{
+    /*
         int userIdxx=0;
         try{
             userIdxx = Integer.parseInt(userIdx);
-        } catch(NumberFormatException e){ }
-
+        } catch(NumberFormatException e){ } */
 
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
             }
-            else if(jwtService.getUserIdx()==userIdxx){
-                PatchUserLogoutRes patchUserLogoutRes = userService.patchLogout(userIdxx);
+
+            else{
+                PatchUserLogoutRes patchUserLogoutRes = userService.patchLogout(jwtService.getUserIdx());
                 return new BaseResponse<>(patchUserLogoutRes);
             }
+            /*
             else{
                 return new BaseResponse<>(USERS_INVALID_ACCESS);
-            }
+            } */
         }catch(BaseException exception){
                 return new BaseResponse<>((exception.getStatus()));
             }
