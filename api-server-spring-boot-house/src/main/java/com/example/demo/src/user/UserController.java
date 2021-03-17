@@ -120,15 +120,12 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/email-check")
-    public BaseResponse<GetCheckEmailRes> checkEmail(@RequestBody GetCheckEmailReq getCheckEmailReq) throws BaseException {
+    public BaseResponse<GetCheckEmailRes> checkEmail(@RequestParam(required = false) String emailId) throws BaseException {
         // Get Users
         GetCheckEmailRes getCheckEmailRes = new GetCheckEmailRes();
-        if(getCheckEmailReq.getNothing()==null){
-            getCheckEmailReq.setNothing("n");
-        }
-        int result = userProvider.checkEmailId(getCheckEmailReq.getEmailId());
+        int result = userProvider.checkEmailId(emailId);
 
-        if(!isRegexEmail(getCheckEmailReq.getEmailId())){
+        if(!isRegexEmail(emailId)){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
 
@@ -146,26 +143,24 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/nickname-check")
-    public BaseResponse<GetCheckNameRes> checkName(@RequestBody GetCheckNameReq getCheckNameReq) throws BaseException {
+    public BaseResponse<GetCheckNameRes> checkName(@RequestParam(required = false) String nickname) throws BaseException {
         // Get Users
         GetCheckNameRes getCheckNameRes = new GetCheckNameRes();
-        if(getCheckNameReq.getNothing()==null){
-            getCheckNameReq.setNothing("n");
-        }
-        int result = userProvider.checkName(getCheckNameReq.getNickname());
-        if(getCheckNameReq.getNickname().length()<2){
+
+        int result = userProvider.checkName(nickname);
+        if(nickname.length()<2){
             return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
         }
 
         if(result==1){
-            List<GetNameListRes> getNameListRes = userProvider.getNameList(getCheckNameReq.getNickname());
+            List<GetNameListRes> getNameListRes = userProvider.getNameList(nickname);
             int num = getNameListRes.size();
             num=num+1;
-            String recommandName = getCheckNameReq.getNickname()+num;
+            String recommandName = nickname+num;
             return new BaseResponse<>(POST_USER_EXISTS_NAME,recommandName);
         }
 
-        if(getCheckNameReq.getNickname().length()>15){
+        if(nickname.length()>15){
             return new BaseResponse<>(INSUFFICIENT_NAME_RANGE);
         }
 

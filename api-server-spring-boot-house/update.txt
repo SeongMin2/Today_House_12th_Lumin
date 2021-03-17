@@ -9,3 +9,5 @@ UserController, UserDao,UserProvider을 추가 및 수정하였습니다.
 userController 부분에서 logout부분을 수정해주었습니다.
 
 
+2021.03.17(루민)
+userController 부분에서 중복체크 api 수정하였습니다. email-check, nickname-check
