@@ -35,5 +35,13 @@ public class HomeController {
         this.jwtService = jwtService;
     }
 
+    //Query String
+    @ResponseBody
+    @GetMapping("/house-warm") // (GET) 127.0.0.1:9000/app/users
+    public BaseResponse<List<GetHousewarmingRes>> getHw() {
+        List<GetHousewarmingRes> getHousewarmingRes = homeProvider.getHw();
+        return new BaseResponse<>(getHousewarmingRes);
+    }
+
 
 }

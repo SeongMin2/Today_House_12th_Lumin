@@ -14,3 +14,13 @@ userController 부분에서 중복체크 api 수정하였습니다. email-check,
 
 2021.03.17(코트)
 home 관련 home 폴더에 model 폴더, HomeController,HomeDao,HomeProvider,HomeService 추가했습니다
+
+2021.03.18(코트)
+-- HomePageCategry, HomePage 테이블 삭제했습니다
+drop table HomePageCategory,HomePage
+
+-- Housewarming 테이블에 썸네일 칼럼 추가했습니다
+alter table Housewarming add thumbnailImageUrl text not null
+
+/app/home/house-warm 구현
+
