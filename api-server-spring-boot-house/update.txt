@@ -21,6 +21,9 @@ drop table HomePageCategory,HomePage
 
 -- Housewarming 테이블에 썸네일 칼럼 추가했습니다
 alter table Housewarming add thumbnailImageUrl text not null
+GET /app/home/house-warm 구현
 
-/app/home/house-warm 구현
+-- User 테이블에 userimageUrl 추가했습니다
 
+-- PicturePost 테이블 (사진탭의 게시글 각각) Pictures 테이블(각 게시글의 사진들) 추가했습니다.
+GET /app/home/picture 구현

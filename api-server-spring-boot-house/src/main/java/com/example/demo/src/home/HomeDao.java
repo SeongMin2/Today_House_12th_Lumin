@@ -34,5 +34,25 @@ public class HomeDao {
                 ));
     }
 
+    public List<GetPictureRes> getPicture(){
+        return this.jdbcTemplate.query("select p.idx as picturepostIdx,\n" +
+                        "       p.userIdx,\n" +
+                        "       u.userimageUrl,\n" +
+                        "       u.name as userName,\n" +
+                        "       p.comment,\n" +
+                        "       GROUP_CONCAT(pictureUrl) as pictureUrl\n" +
+                        "from PicturePost p\n" +
+                        "         inner join Pictures p2 on p.idx = p2.picturepostIdx\n" +
+                        "         inner join User u on u.idx = p.userIdx group by p.idx",
+                (rs, rowNum) -> new GetPictureRes(
+                        rs.getInt("picturepostIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("comment"),
+                        rs.getString("pictureUrl"))
+                );
+    }
+
 
 }

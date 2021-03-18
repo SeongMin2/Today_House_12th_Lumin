@@ -34,8 +34,13 @@ public class HomeProvider {
     }
 
     public List<GetHousewarmingRes> getHw() {
-        List<GetHousewarmingRes> getSHousewarmingRes = homeDao.getHw();
-        return getSHousewarmingRes;
+        List<GetHousewarmingRes> getHousewarmingRes = homeDao.getHw();
+        return getHousewarmingRes;
+    }
+
+    public List<GetPictureRes> getPicture() {
+        List<GetPictureRes> getPictureRes = homeDao.getPicture();
+        return getPictureRes;
     }
 
 

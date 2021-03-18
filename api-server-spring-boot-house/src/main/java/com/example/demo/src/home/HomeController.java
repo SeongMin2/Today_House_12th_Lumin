@@ -43,5 +43,13 @@ public class HomeController {
         return new BaseResponse<>(getHousewarmingRes);
     }
 
+    //Query String
+    @ResponseBody
+    @GetMapping("/picture") // (GET) 127.0.0.1:9000/app/users
+    public BaseResponse<List<GetPictureRes>> getPicture() {
+        List<GetPictureRes> getPictureRes = homeProvider.getPicture();
+        return new BaseResponse<>(getPictureRes);
+    }
+
 
 }
