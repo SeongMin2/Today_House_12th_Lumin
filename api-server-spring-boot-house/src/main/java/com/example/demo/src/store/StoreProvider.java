@@ -36,4 +36,12 @@ public class StoreProvider {
         this.storeDao = storeDao;
         this.jwtService = jwtService;
     }
+
+    public GetStoreHomeRes getStoreHome (int pageIdx, int userIdx) throws BaseException{
+        List<GetStoreCategoryRes> getStoreCategoryRes = storeDao.getStoreCategory(pageIdx);
+        List<GetStoreTDPDRes> getStoreTDPDRes = storeDao.getStoreTDPD(userIdx);
+        List<GetStorePopPDRes>  getStorePopPDRes = storeDao.getStorePopPD(userIdx);
+        GetStoreHomeRes getStoreHomeRes = new GetStoreHomeRes(getStoreCategoryRes,getStoreTDPDRes,getStorePopPDRes);
+        return getStoreHomeRes;
+    }
 }
