@@ -28,5 +28,22 @@ GET /app/home/house-warm 구현
 -- PicturePost 테이블 (사진탭의 게시글 각각) Pictures 테이블(각 게시글의 사진들) 추가했습니다.
 GET /app/home/picture 구현
 
-2021.03.19 ( 루민)
+2021.03.19 (루민)
 store파일 설정만했습니다.
+
+2021.03.20(루민)
+Product TB의 
+discountRate,reviewLimit 을 제거
+salePrice column을 생성함
+monthlyInstallment column 생성. 무이자 할부에 대한 개월 정보 저장함 만약 0이라면 무이자할부표시안함
+specialStatus column 생성. 특가여부 알려줌
+
+SetRelation TB의 selectOrder column 생성함
+
+ProductImg TB의 numbering column 생성함 : 이미지들의 순서 표현
+
+TodayDeal TB의 salePrice column 생성함 : 오늘의 딜만의 할인된 가격이 분명 있을 것이고 오늘의 딜이 지나면 기존 할인가로 돌아갈것 같음 그래서 추가함
+
+StorePage TB의 categoryOut column 생성함 : 카테고리가 +버튼 밖에 있는지 안에있는지 구분
+
+StoreHome의 오늘의 딜, 인기상품들과 카테고리들이 보여주게 구현
