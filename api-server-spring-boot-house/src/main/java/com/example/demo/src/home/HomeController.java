@@ -39,8 +39,18 @@ public class HomeController {
     @ResponseBody
     @GetMapping("/house-warm") // (GET) 127.0.0.1:9000/app/users
     public BaseResponse<List<GetHousewarmingRes>> getHw() {
-        List<GetHousewarmingRes> getHousewarmingRes = homeProvider.getHw();
-        return new BaseResponse<>(getHousewarmingRes);
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<GetHousewarmingRes> getHousewarmingRes = homeProvider.getHw(userIdx);
+                return new BaseResponse<>(getHousewarmingRes);
+            }
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
     //Query String
@@ -52,11 +62,12 @@ public class HomeController {
     }
 
     @ResponseBody
-    @GetMapping("/{picturepostIdx}/comments")
+    @GetMapping("/picture/{picturepostIdx}/comments")
     public BaseResponse<List<GetPictureReviewRes>> getReviews(@PathVariable("picturepostIdx") int picturepostIdx) {
         List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(picturepostIdx);
         return new BaseResponse<>(getPictureReviewRes);
     }
+
 
 
 }

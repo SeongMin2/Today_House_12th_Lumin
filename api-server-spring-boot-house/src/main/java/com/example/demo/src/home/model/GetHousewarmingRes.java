@@ -10,6 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetHousewarmingRes {
    private String thumbnailImageUrl;
+   private int scrapCount;
+   private String scrapStaus;
    private int userIdx;
    private String userName;
    private String title;

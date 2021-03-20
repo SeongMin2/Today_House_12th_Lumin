@@ -33,8 +33,8 @@ public class HomeProvider {
         this.jwtService = jwtService;
     }
 
-    public List<GetHousewarmingRes> getHw() {
-        List<GetHousewarmingRes> getHousewarmingRes = homeDao.getHw();
+    public List<GetHousewarmingRes> getHw(int userIdx) {
+        List<GetHousewarmingRes> getHousewarmingRes = homeDao.getHw(userIdx);
         return getHousewarmingRes;
     }
 
