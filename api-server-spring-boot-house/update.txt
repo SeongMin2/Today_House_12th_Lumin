@@ -62,3 +62,11 @@ Store페이지의 광고를 담당하는 GetStoreAdRes model을 추가하였습�
 
 집들이 화면 jwt적용 ,스크랩갯수 ,스크랩 여부 추가
 
+2021.03.21(루민)
+DeliveryandRefund TB에서 freeConditionPrice, outDescription column 생성
+
+Helpful이라는 TB를 새로 생성
+
+Review TB의 helpful column 삭제
+
+스토어 상품 선택 시 화면 전반적 구현
