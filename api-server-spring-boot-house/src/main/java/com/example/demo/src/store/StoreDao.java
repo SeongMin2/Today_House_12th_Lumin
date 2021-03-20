@@ -46,7 +46,9 @@ public class StoreDao {
         return this.jdbcTemplate.query("select Product.idx, Product.evalableIdx, ProductImg.imgUrl,\n" +
                         "       Case When ProductScrap.status is Null THEN 'F'\n" +
                         "        ELSE ProductScrap.status END as scrapStatus,\n" +
-                        "       CASE WHEN DATEDIFF(TodayDeal.deadline,now())+1 <=0 then 0 ELSE DATEDIFF(TodayDeal.deadline,now())+1 END as leftTime # 23시간남아도 하루 남았다고 하므로 1을 더해줌\n" +
+                        "       CASE WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline) <=0 then 0\n" +
+                        "           WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)>86400 then DATEDIFF(TodayDeal.deadline,now())\n" +
+                        "           ELSE SEC_TO_TIME(TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)) END as leftTime # 23시간남아도 하루 남았다고 하므로 1을 더해줌\n" +
                         "     , Brand.name as brandName, Product.name as productName\n" +
                         "     , CASE WHEN TodayDeal.status='T' then TRUNCATE((Product.fixedPrice-TodayDeal.salePrice)/Product.fixedPrice*100,0)\n" +
                         "         ELSE TRUNCATE((Product.fixedPrice-Product.salePrice)/Product.fixedPrice*100,0) END as percent\n" +
@@ -191,7 +193,9 @@ public class StoreDao {
                         "       Case when scrapNum.scrapCount is null then 0\n" +
                         "        ELSE scrapNum.scrapCount END as scrapCount,\n" +
                         "       CASE WHEN TodayDeal.status='T' THEN\n" +
-                        "           CASE WHEN DATEDIFF(TodayDeal.deadline,now())+1 <=0 then 0 ELSE DATEDIFF(TodayDeal.deadline,now())+1 END\n" +
+                        "           CASE WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline) <=0 then 0\n" +
+                        "           WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)>86400 then DATEDIFF(TodayDeal.deadline,now())\n" +
+                        "           ELSE SEC_TO_TIME(TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)) END\n" +
                         "         ELSE 0 END as leftTime\n" +
                         "     , Brand.name as brandName, Product.name as productName\n" +
                         "     , CASE WHEN TodayDeal.status='T' then TRUNCATE((Product.fixedPrice-TodayDeal.salePrice)/Product.fixedPrice*100,0)\n" +
@@ -342,7 +346,9 @@ public class StoreDao {
                         "       Case When ProductScrap.status is Null THEN 'F'\n" +
                         "        ELSE ProductScrap.status END as scrapStatus,\n" +
                         "       CASE WHEN TodayDeal.status='T' THEN\n" +
-                        "           CASE WHEN DATEDIFF(TodayDeal.deadline,now())+1 <=0 then 0 ELSE DATEDIFF(TodayDeal.deadline,now())+1 END\n" +
+                        "           CASE WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline) <=0 then 0\n" +
+                        "           WHEN TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)>86400 then DATEDIFF(TodayDeal.deadline,now())\n" +
+                        "           ELSE SEC_TO_TIME(TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)) END\n" +
                         "         ELSE 0 END as leftTime\n" +
                         "     , Brand.name as brandName, Product.name as productName\n" +
                         "     , CASE WHEN TodayDeal.status='T' then TRUNCATE((Product.fixedPrice-TodayDeal.salePrice)/Product.fixedPrice*100,0)\n" +
@@ -391,7 +397,7 @@ public class StoreDao {
                         "group by productIdx) ProductImg\n" +
                         "on ProductImg.productIdx=Product.idx\n" +
                         "\n" +
-                        "group by Product.idx;",
+                        "group by Product.idx",
                 (rs, rowNum) -> new GetStoreSetProductRes(
                         rs.getInt("idx"),
                         "선택 "+rs.getString("selectOrder"),

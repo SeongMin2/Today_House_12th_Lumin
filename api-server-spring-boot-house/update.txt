@@ -70,3 +70,5 @@ Helpful이라는 TB를 새로 생성
 Review TB의 helpful column 삭제
 
 스토어 상품 선택 시 화면 전반적 구현
+
+스토어의 오늘의 딜 부분 시간 출력 부분 완벽 수정

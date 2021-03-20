@@ -42,7 +42,12 @@ public class GetStoreProductInfoRes {
             this.productName=productName;
         }
         else{ // 오늘의 딜인경우
-            this.leftTime=leftTime+"일 남음";
+            if(leftTime.length()<=2){
+                this.leftTime=leftTime+"일 남음";
+            }
+            else{
+                this.leftTime=leftTime+" 남음";
+            }
             this.productName="[오늘의딜]"+productName;
         }
         this.brandName=brandName;
