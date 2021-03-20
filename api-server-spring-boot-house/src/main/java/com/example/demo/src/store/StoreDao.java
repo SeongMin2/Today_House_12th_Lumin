@@ -19,6 +19,16 @@ public class StoreDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public List<GetStoreAdRes> getStoreAd (int pageIdx){
+        return this.jdbcTemplate.query("select idx,imgUrl from StoreAdvertisment\n" +
+                        "where storePageIdx=?",
+                (rs, rowNum) -> new GetStoreAdRes(
+                        rs.getInt("idx"),
+                        rs.getString("imgUrl")),
+                pageIdx);
+    }
+
+
     public List<GetStoreCategoryRes> getStoreCategory (int pageIdx){
         return this.jdbcTemplate.query("select idx,name,imageUrl,categoryOut from StorePage\n" +
                         "where parentIdx=?",

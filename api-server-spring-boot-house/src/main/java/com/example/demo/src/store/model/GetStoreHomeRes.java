@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class GetStoreHomeRes {
+    private List<GetStoreAdRes> storeAdvertisement;
     private List<GetStoreCategoryRes> storeCategory;
     private List<GetStoreTDPDRes> todayDeal;
     private List<GetStorePopPDRes> popular;

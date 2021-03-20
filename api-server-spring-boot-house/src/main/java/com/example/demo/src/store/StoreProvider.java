@@ -38,10 +38,12 @@ public class StoreProvider {
     }
 
     public GetStoreHomeRes getStoreHome (int pageIdx, int userIdx) throws BaseException{
+        List<GetStoreAdRes> getStoreAdRes = storeDao.getStoreAd(pageIdx);
         List<GetStoreCategoryRes> getStoreCategoryRes = storeDao.getStoreCategory(pageIdx);
         List<GetStoreTDPDRes> getStoreTDPDRes = storeDao.getStoreTDPD(userIdx);
         List<GetStorePopPDRes>  getStorePopPDRes = storeDao.getStorePopPD(userIdx);
-        GetStoreHomeRes getStoreHomeRes = new GetStoreHomeRes(getStoreCategoryRes,getStoreTDPDRes,getStorePopPDRes);
+
+        GetStoreHomeRes getStoreHomeRes = new GetStoreHomeRes(getStoreAdRes,getStoreCategoryRes,getStoreTDPDRes,getStorePopPDRes);
         return getStoreHomeRes;
     }
 }
