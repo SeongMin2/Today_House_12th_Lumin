@@ -17,7 +17,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController
-@RequestMapping("/app/home")
+@RequestMapping("/app/homes")
 public class HomeController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,6 +49,13 @@ public class HomeController {
     public BaseResponse<List<GetPictureRes>> getPicture() {
         List<GetPictureRes> getPictureRes = homeProvider.getPicture();
         return new BaseResponse<>(getPictureRes);
+    }
+
+    @ResponseBody
+    @GetMapping("/{picturepostIdx}/comments")
+    public BaseResponse<List<GetPictureReviewRes>> getReviews(@PathVariable("picturepostIdx") int picturepostIdx) {
+        List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(picturepostIdx);
+        return new BaseResponse<>(getPictureReviewRes);
     }
 
 

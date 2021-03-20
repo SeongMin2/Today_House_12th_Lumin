@@ -43,5 +43,9 @@ public class HomeProvider {
         return getPictureRes;
     }
 
+    public List<GetPictureReviewRes> getReviews(int picturepostIdx) {
+        List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(picturepostIdx);
+        return getPictureReviewRes;
+    }
 
 }

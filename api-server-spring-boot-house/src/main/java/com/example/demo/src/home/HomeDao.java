@@ -54,5 +54,37 @@ public class HomeDao {
                 );
     }
 
+    public List<GetPictureReviewRes> getReviews(int picturepostIdx){
+        return this.jdbcTemplate.query("select p.idx as commentIdx,p.picturepostIdx, p.userIdx, u.userimageUrl,u.name as userName\n" +
+                        "       ,p.comment,\n" +
+                        "       case\n" +
+                        "           when timestampdiff(second , p.createdAt, current_timestamp()) < 60\n" +
+                        "               then concat(timestampdiff(second , p.createdAt, current_timestamp()), '초')\n" +
+                        "           when timestampdiff(minute , p.createdAt, current_timestamp()) < 60\n" +
+                        "               then concat(timestampdiff(minute , p.createdAt, current_timestamp()), '분')\n" +
+                        "           when timestampdiff(hour, p.createdAt, current_timestamp()) < 24\n" +
+                        "               then concat(timestampdiff(hour, p.createdAt, current_timestamp()), '시간')\n" +
+                        "           when timestampdiff(day, p.createdAt, current_timestamp()) < 7\n" +
+                        "               then concat(timestampdiff(day, p.createdAt, current_timestamp()), '일')\n" +
+                        "           when timestampdiff(week, p.createdAt, current_timestamp()) < 4\n" +
+                        "                then concat(timestampdiff(week, p.createdAt, current_timestamp()), '주')\n" +
+                        "           when timestampdiff(month , p.createdAt, current_timestamp()) < 12\n" +
+                        "                then concat(timestampdiff(month , p.createdAt, current_timestamp()), '달')\n" +
+                        "           else '1년'\n" +
+                        "       end as howmuchTime\n" +
+                        "               from PicturesReview p\n" +
+                        "inner join User u on p.userIdx = u.idx\n" +
+                        "inner join PicturePost PP on p.picturepostIdx = PP.idx where p.picturepostIdx=?",
+                (rs, rowNum) -> new GetPictureReviewRes(
+                        rs.getInt("commentIdx"),
+                        rs.getInt("picturepostIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("comment"),
+                        rs.getString("howmuchTime")),
+                picturepostIdx);
+    }
+
 
 }
