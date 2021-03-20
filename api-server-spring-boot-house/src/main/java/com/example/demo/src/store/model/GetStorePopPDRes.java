@@ -9,6 +9,7 @@ import lombok.Setter;
 
 public class GetStorePopPDRes {
     private int productIdx;
+    private int evalableIdx;
     private String imgUrl;
     private String scrapStatus;
     private String brandName;
@@ -19,8 +20,10 @@ public class GetStorePopPDRes {
     private String starPoint;
     private String reviewNum;
     private String specialPriceStatus;
-    public GetStorePopPDRes(int productIdx,String imgUrl,String scrapStatus,String brandName,String productName,String discount,String setProductStatus,String price, String starPoint,String reviewNum,String specialPriceStatus){
+    private String freeDeliveryStatus;
+    public GetStorePopPDRes(int productIdx,int evalableIdx,String imgUrl,String scrapStatus,String brandName,String productName,String discount,String setProductStatus,String price, String starPoint,String reviewNum,String specialPriceStatus,String freeDeliveryStatus){
         this.productIdx=productIdx;
+        this.evalableIdx=evalableIdx;
         this.imgUrl=imgUrl;
         this.scrapStatus=scrapStatus;
         this.brandName=brandName;
@@ -36,6 +39,7 @@ public class GetStorePopPDRes {
         this.starPoint=starPoint;
         this.reviewNum=reviewNum;
         this.specialPriceStatus=specialPriceStatus;
+        this.freeDeliveryStatus=freeDeliveryStatus;
     }
 }
 

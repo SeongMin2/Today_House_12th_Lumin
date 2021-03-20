@@ -9,6 +9,7 @@ import lombok.Setter;
 
 public class GetStoreTDPDRes {
     private int productIdx;
+    private int evalableIdx;
     private String imgUrl;
     private String scrapStatus;
     private String leftTime;
@@ -19,8 +20,10 @@ public class GetStoreTDPDRes {
     private String price;
     private String starPoint;
     private String reviewNum;
-    public GetStoreTDPDRes(int productIdx,String imgUrl,String scrapStatus,String leftTime,String brandName,String productName,String discount,String setProductStatus,String price, String starPoint,String reviewNum){
+    private String freeDeliveryStatus;
+    public GetStoreTDPDRes(int productIdx, int evalableIdx,String imgUrl,String scrapStatus,String leftTime,String brandName,String productName,String discount,String setProductStatus,String price, String starPoint,String reviewNum,String freeDeliveryStatus){
         this.productIdx=productIdx;
+        this.evalableIdx=evalableIdx;
         this.imgUrl=imgUrl;
         this.scrapStatus=scrapStatus;
         this.leftTime=leftTime;
@@ -36,6 +39,7 @@ public class GetStoreTDPDRes {
         }
         this.starPoint=starPoint;
         this.reviewNum=reviewNum;
+        this.freeDeliveryStatus=freeDeliveryStatus;
     }
 }
 /*

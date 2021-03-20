@@ -43,7 +43,32 @@ public class StoreProvider {
         List<GetStoreTDPDRes> getStoreTDPDRes = storeDao.getStoreTDPD(userIdx);
         List<GetStorePopPDRes>  getStorePopPDRes = storeDao.getStorePopPD(userIdx);
 
-        GetStoreHomeRes getStoreHomeRes = new GetStoreHomeRes(getStoreAdRes,getStoreCategoryRes,getStoreTDPDRes,getStorePopPDRes);
+
+        GetStoreHomeRes getStoreHomeRes = new GetStoreHomeRes(getStoreCategoryRes,getStoreTDPDRes,getStorePopPDRes);
+        for(int i=0;i<getStoreAdRes.size();i++){
+            getStoreHomeRes.getStoreAdvertisement().add(getStoreAdRes.get(i).getAdImgUrl());
+        }
+
         return getStoreHomeRes;
+    }
+
+
+    public GetStoreProductRes getProduct(int userIdx, int productIdx){
+        GetStoreProductInfoRes getStoreProductInfoRes = storeDao.getProductInfo(userIdx,productIdx);
+
+        GetStoreProductStarRes getStoreProductStarRes = storeDao.getProductStar(productIdx);
+        List<GetStoreProductReviewRes> getStoreProductReviewRes = storeDao.getProductReview(productIdx);
+        GetStoreProductRes getStoreProductRes = new GetStoreProductRes(getStoreProductInfoRes,getStoreProductStarRes,getStoreProductReviewRes);
+
+        if(getStoreProductInfoRes.getSetProductStatus().equals("T")){
+            List<GetStoreSetProductRes> getStoreSetProductRes = storeDao.getSetProduct(getStoreProductInfoRes.getProductIdx(),userIdx);
+            getStoreProductRes.setSetProduct(getStoreSetProductRes);
+        }
+
+
+
+
+        return getStoreProductRes;
+
     }
 }
