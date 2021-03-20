@@ -58,3 +58,5 @@ Store페이지의 광고를 담당하는 GetStoreAdRes model을 추가하였습�
 
 사진탭 게시글 댓글 보여주는 GET /app/homes/:picturepostIdx/comments api 추가했습니다
 
+집들이 화면 API에 userimageUrl 추가
+
