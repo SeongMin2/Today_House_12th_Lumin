@@ -60,3 +60,5 @@ Store페이지의 광고를 담당하는 GetStoreAdRes model을 추가하였습�
 
 집들이 화면 API에 userimageUrl 추가
 
+집들이 화면 jwt적용 ,스크랩갯수 ,스크랩 여부 추가
+
