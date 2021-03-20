@@ -14,4 +14,5 @@ public class GetHousewarmingRes {
    private String userName;
    private String title;
    private String newContent;
+   private String userimageUrl;
 }

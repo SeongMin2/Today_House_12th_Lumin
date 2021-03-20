@@ -22,7 +22,7 @@ public class HomeDao {
 
     public List<GetHousewarmingRes> getHw(){
         return this.jdbcTemplate.query("select thumbnailImageUrl, U.idx as userIdx,U.Name as userName, Housewarming.name as title,\n" +
-                        "       if(timestampdiff(day, Housewarming.createdAt, current_timestamp()) < 7, 'T', 'F') as newContent\n" +
+                        "       if(timestampdiff(day, Housewarming.createdAt, current_timestamp()) < 7, 'T', 'F') as newContent, U.userimageUrl\n" +
                         "from Housewarming inner join User U\n" +
                         "on U.idx=Housewarming.userIdx",
                 (rs, rowNum) -> new GetHousewarmingRes(
@@ -30,7 +30,8 @@ public class HomeDao {
                         rs.getInt("userIdx"),
                         rs.getString("userName"),
                         rs.getString("title"),
-                        rs.getString("newContent")
+                        rs.getString("newContent"),
+                        rs.getString("userimageUrl")
                 ));
     }
 
