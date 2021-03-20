@@ -51,3 +51,10 @@ StoreHome의 오늘의 딜, 인기상품들과 카테고리들이 보여주게 �
 2021.03.20(루민)
 Store페이지의 광고를 담당하는 GetStoreAdRes model을 추가하였습니다.
 
+2021.03.20(코트)
+사진탭 게시글에 댓글관리하는 PictureReview 테이블 추가했습니다
+
+댓글 보여주기 담당하는 GetPictureReviewRes model 추가했습니다.
+
+사진탭 게시글 댓글 보여주는 GET /app/homes/:picturepostIdx/comments api 추가했습니다
+
