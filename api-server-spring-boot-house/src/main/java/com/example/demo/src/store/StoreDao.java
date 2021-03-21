@@ -185,6 +185,21 @@ public class StoreDao {
     }
 
 
+    public List<GetStoreProductImgRes> getProductImg(int productIdx){
+        return this.jdbcTemplate.query("select idx,productIdx,imgUrl from ProductImg\n" +
+                        "where productIdx=?",
+                (rs, rowNum) -> new GetStoreProductImgRes(
+                        rs.getInt("idx"),
+                        rs.getString("imgUrl")
+                ),
+                productIdx);
+    }
+
+
+
+
+
+
     public GetStoreProductInfoRes getProductInfo(int userIdx,int productIdx){
         DecimalFormat formatter = new DecimalFormat("###,###");
         return this.jdbcTemplate.queryForObject("select Product.idx,\n" +
@@ -414,6 +429,128 @@ public class StoreDao {
                         rs.getString("freeDeliveryStatus")
                 ),
                 productIdx,userIdx);
+    }
+
+
+
+    public List<GetProductOptionRes> getProductOption(int productIdx){
+        return this.jdbcTemplate.query("select idx,productIdx,name,required from ProductOption\n" +
+                        "where productIdx=?",
+                (rs, rowNum) -> new GetProductOptionRes(
+                        rs.getInt("idx"),
+                        rs.getInt("productIdx"),
+                        rs.getString("name"),
+                        rs.getString("required")
+                ),
+                productIdx);
+    }
+
+
+
+    public List<GetProductOptionDetailRes> getProductOptionDetail(int productIdx){
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return this.jdbcTemplate.query("select OptionContent.idx, optionIdx,productIdx,OptionContent.name,OptionContent.status,price from ProductOption\n" +
+                        "inner join OptionContent\n" +
+                        "on OptionContent.optionIdx=ProductOption.idx\n" +
+                        "\n" +
+                        "where productIdx=?\n" +
+                        "order by price",
+                (rs, rowNum) -> new GetProductOptionDetailRes(
+                        rs.getInt("idx"),
+                        rs.getInt("optionIdx"),
+                        rs.getInt("productIdx"),
+                        rs.getString("name"),
+                        formatter.format(rs.getInt("price")),
+                        rs.getString("status")
+                ),
+                productIdx);
+    }
+
+
+
+    public int checkSetProduct(int productIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select setProductStatus from Product\n" +
+                "where idx=? and setProductStatus='T') as exist", int.class,productIdx);
+    }
+
+
+    public List<GetOptionSetProductRes> getOptionSetProduct(int productIdx){
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return this.jdbcTemplate.query("select Product.idx,RelatedP.selectOrder,ProductImg.imgUrl,\n" +
+                        "     Brand.name as brandName, Product.name as productName\n" +
+                        "     , CASE WHEN TodayDeal.status='T' then TRUNCATE((Product.fixedPrice-TodayDeal.salePrice)/Product.fixedPrice*100,0)\n" +
+                        "         ELSE TRUNCATE((Product.fixedPrice-Product.salePrice)/Product.fixedPrice*100,0) END as percent,\n" +
+                        "       Product.fixedPrice as originalPrice\n" +
+                        "     , CASE WHEN TodayDeal.status='T' then TodayDeal.salePrice\n" +
+                        "         ELSE Product.salePrice END as salePrice\n" +
+                        "     ,setProductStatus\n" +
+                        "     , RelatedP.relatedProduct as relatedProduct\n" +
+                        "     , specialStatus\n" +
+                        "     , CASE WHEN DeliveryandRefund.deliveryCost=0 THEN 'T'\n" +
+                        "         ELSE 'F' END as freeDeliveryStatus\n" +
+                        "      from Product\n" +
+                        "left outer join TodayDeal\n" +
+                        "on TodayDeal.productIdx=Product.idx\n" +
+                        "\n" +
+                        "inner join Brand\n" +
+                        "on Brand.idx=Product.brandIdx\n" +
+                        "\n" +
+                        "inner join (select Product.idx as productIdx,CASE WHEN SetRelation.productIdx is NULL THEN Product.idx\n" +
+                        "         ELSE SetRelation.productIdx END as relatedProduct,selectOrder from Product\n" +
+                        "left outer join SetRelation\n" +
+                        "on SetRelation.setProductIdx=Product.idx\n" +
+                        "where Product.idx=?) RelatedP\n" +
+                        "on RelatedP.relatedProduct=Product.idx\n" +
+                        "\n" +
+                        "left outer join (select AVG(starpoint) as starpoint,COUNT(CASE WHEN Review.status='T' THEN 1 END) as reviewNum, Review.productIdx from Review\n" +
+                        "group by Review.productIdx) ProductReview\n" +
+                        "on ProductReview.productIdx=RelatedP.relatedProduct\n" +
+                        "\n" +
+                        "inner join DeliveryandRefund\n" +
+                        "on DeliveryandRefund.productIdx = Product.idx\n" +
+                        "\n" +
+                        "inner join (select imgUrl,productIdx from ProductImg\n" +
+                        "group by productIdx) ProductImg\n" +
+                        "on ProductImg.productIdx=Product.idx\n" +
+                        "\n" +
+                        "group by Product.idx",
+                (rs, rowNum) -> new GetOptionSetProductRes(
+                        rs.getInt("idx"),
+                        rs.getString("selectOrder"),
+                        rs.getString("imgUrl"),
+                        rs.getString("brandName"),
+                        rs.getString("productName"),
+                        rs.getString("percent")+"%",
+                        formatter.format(rs.getInt("salePrice")),
+                        rs.getString("specialStatus"),
+                        rs.getString("freeDeliveryStatus")
+                ),
+                productIdx);
+    }
+
+
+    public int getMaxPrice(int productIdx){
+        return this.jdbcTemplate.queryForObject("select Max(price) as maxPrice from ProductOption\n" +
+                "inner join OptionContent\n" +
+                "on OptionContent.optionIdx=ProductOption.idx\n" +
+                "\n" +
+                "where productIdx=? and ProductOption.required='T'\n" +
+                "order by price",int.class,productIdx);
+    }
+
+    public int getMinPrice(int productIdx){
+        return this.jdbcTemplate.queryForObject("select Min(price) as maxPrice from ProductOption\n" +
+                "inner join OptionContent\n" +
+                "on OptionContent.optionIdx=ProductOption.idx\n" +
+                "\n" +
+                "where productIdx=? and ProductOption.required='T' and price>0\n" +
+                "order by price",int.class,productIdx);
+    }
+
+
+    public int checkProduct(int productIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select * from Product\n" +
+                "where idx=?) as exist",int.class,productIdx);
     }
 
 

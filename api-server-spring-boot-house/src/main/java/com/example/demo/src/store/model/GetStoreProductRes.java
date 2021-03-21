@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 
 public class GetStoreProductRes {
+    private List<String> productImg = new ArrayList<>();
     private GetStoreProductInfoRes productInfo;
     private List<GetStoreSetProductRes> setProduct = new ArrayList<>();
     private GetStoreProductStarRes starDistribution;

@@ -74,7 +74,14 @@ public class GetStoreProductInfoRes {
         }
 
         if(limitedArea.equals("도서산간 지역 / 제주도")){
-            this.limitedArea="제주도/도서산간 "+additionalCost+"원";
+            if(setProductStatus.equals("T")){
+                this.limitedArea="F";
+                this.setOutDescription.add("제주도/도서산간 지역 배송 불가");
+            }
+            else{
+                this.limitedArea="제주도/도서산간 "+additionalCost+"원";
+            }
+
         }
         else{
             this.limitedArea="F";

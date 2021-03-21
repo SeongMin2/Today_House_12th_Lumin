@@ -79,4 +79,28 @@ public class StoreController {
     }
 
 
+
+    @ResponseBody
+    @GetMapping("/product/{productIdx}/option")
+    public BaseResponse<GetProductOptionFinalRes> getProductOption(@PathVariable("productIdx")int productIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetProductOptionFinalRes getProductOptionFinalRes = storeProvider.getProductOption(productIdx);
+                return new BaseResponse<>(getProductOptionFinalRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
+
+
 }
