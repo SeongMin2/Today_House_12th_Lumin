@@ -40,20 +40,20 @@ public class ScrapService {
 
     }
 
-    public PatchScrapRes patchScrap(int userIdx, int contentIdx, int evalableIdx){
+    public PatchScrapRes patchScrap(int userIdx, int evalableIdx,int contentIdx){
         int exist=scrapDao.checkScrapExist(userIdx,contentIdx,evalableIdx);
         if(exist==1) {
-            char status = scrapProvider.checkScrap(userIdx, contentIdx,evalableIdx);
+            char status = scrapProvider.checkScrap(userIdx, evalableIdx,contentIdx);
             if (status == 'T') {
-                PatchScrapRes patchScrapRes = scrapDao.patchScrap("F", userIdx, contentIdx, evalableIdx);
+                PatchScrapRes patchScrapRes = scrapDao.patchScrap("F", userIdx, evalableIdx,contentIdx);
                 return patchScrapRes;
             }
             else{
-                PatchScrapRes patchScrapRes = scrapDao.patchScrap("T", userIdx, contentIdx ,evalableIdx);
+                PatchScrapRes patchScrapRes = scrapDao.patchScrap("T", userIdx,evalableIdx, contentIdx);
                 return patchScrapRes;
             }
         } else{
-            PatchScrapRes patchScrapRes =scrapDao.createScrap("T",userIdx,contentIdx,evalableIdx);
+            PatchScrapRes patchScrapRes =scrapDao.createScrap("T",userIdx,evalableIdx,contentIdx);
             return patchScrapRes;
         }
 

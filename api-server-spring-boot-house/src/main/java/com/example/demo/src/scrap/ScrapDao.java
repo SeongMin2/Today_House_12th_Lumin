@@ -20,39 +20,39 @@ public class ScrapDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public int checkScrapExist(int userIdx,int contentIdx,int evalableIdx){
+    public int checkScrapExist(int userIdx,int evalableIdx,int contentIdx){
         return this.jdbcTemplate.queryForObject("select Exists(select status from Scrap\n" +
-                "where contentIdx=? and evalableIdx=? and userIdx=? ) as ScrapExist", int.class,contentIdx,evalableIdx,userIdx);
+                "where evalableIdx=? and contentIdx=? and userIdx=? ) as ScrapExist", int.class,evalableIdx,contentIdx,userIdx);
     }
-    public char checkScrap(int userIdx,int contentIdx,int evalableIdx){
+    public char checkScrap(int userIdx,int evalableIdx,int contentIdx){
         return this.jdbcTemplate.queryForObject("select status from Scrap \n" +
-                "where contentIdx=? and evalableIdx =? and userIdx=?", char.class,contentIdx,evalableIdx,userIdx);
+                "where evalableIdx =? and contentIdx=? and userIdx=?", char.class,evalableIdx,contentIdx,userIdx);
     }
-    public PatchScrapRes patchScrap(String status,int userIdx,int contentIdx,int evalableIdx){
+    public PatchScrapRes patchScrap(String status,int userIdx,int evalableIdx,int contentIdx){
         this.jdbcTemplate.update("UPDATE Scrap set status=? \n" +
-                        "where userIdx=? and contentIdx=? and evalableIdx=?",
-                status,userIdx,contentIdx,evalableIdx);
-        return this.jdbcTemplate.queryForObject("select status,userIdx,contentIdx,evalableIdx from Scrap\n" +
-                        "where userIdx=? and contentIdx=? and evalableIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                        "where userIdx=? and evalableIdx=? and contentIdx=?",
+                status,userIdx,evalableIdx,contentIdx);
+        return this.jdbcTemplate.queryForObject("select status,userIdx,evalableIdx,contentIdx from Scrap\n" +
+                        "where userIdx=? and evalableIdx=? and contentIdx=?",  // queryForObject는 하나만 반환할 때 사용
                 (rs, rowNum) -> new PatchScrapRes(
                         rs.getInt("userIdx"),
-                        rs.getInt("contentIdx"),
                         rs.getInt("evalableIdx"),
+                        rs.getInt("contentIdx"),
                         rs.getString("status")),
-                userIdx,contentIdx,evalableIdx);
+                userIdx,evalableIdx,contentIdx);
     }
 
 
-    public PatchScrapRes createScrap(String status, int userIdx, int contentIdx,int evalableIdx){
-        this.jdbcTemplate.update("insert into Scrap (userIdx,contentIdx,evalableIdx,createdAt,status) VALUES (?,?,?,now(),?)",
-                userIdx,contentIdx,evalableIdx,status);
-        return this.jdbcTemplate.queryForObject("select userIdx,contentIdx,evalableIdx,status from Scrap\n" +
-                        "where userIdx=? and contentIdx=? and evalableIdx=?",
+    public PatchScrapRes createScrap(String status, int userIdx,int evalableIdx,int contentIdx){
+        this.jdbcTemplate.update("insert into Scrap (userIdx,evalableIdx,contentIdx,createdAt,status) VALUES (?,?,?,now(),?)",
+                userIdx,evalableIdx,contentIdx,status);
+        return this.jdbcTemplate.queryForObject("select userIdx,evalableIdx,contentIdx,status from Scrap\n" +
+                        "where userIdx=? and evalableIdx=? and contentIdx=? ",
                 (rs, rowNum) -> new PatchScrapRes(
                         rs.getInt("userIdx"),
-                        rs.getInt("contentIdx"),
                         rs.getInt("evalableIdx"),
+                        rs.getInt("contentIdx"),
                         rs.getString("status")),
-                userIdx,contentIdx,evalableIdx);
+                userIdx,evalableIdx,contentIdx);
     }
 }

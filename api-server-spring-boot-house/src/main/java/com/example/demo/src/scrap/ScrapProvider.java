@@ -36,7 +36,7 @@ public class ScrapProvider {
         this.jwtService = jwtService;
     }
 
-    public char checkScrap(int userIdx,int contentIdx, int evalableIdx){
-        return scrapDao.checkScrap(userIdx,contentIdx,evalableIdx);
+    public char checkScrap(int userIdx, int evalableIdx,int contentIdx){
+        return scrapDao.checkScrap(userIdx,evalableIdx,contentIdx);
     }
 }
