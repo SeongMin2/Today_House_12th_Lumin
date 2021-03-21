@@ -85,3 +85,7 @@ BaseResponseStatus 수정
 GetMoreReviewRes 모델 추가
 GetProductOptionDetailRes 모델 수정
 리뷰 더보기를 구현
+
+2021.03.21(루민)
+PatchHelpfulRes 모델 추가
+리뷰 및의 도움이 되었는지 버튼 활성화 비활성화 기능 구현

@@ -2,6 +2,7 @@ package com.example.demo.src.store;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.secret.Secret;
+import com.example.demo.src.store.model.PatchHelpfulRes;
 import com.example.demo.src.user.UserDao;
 import com.example.demo.src.user.UserProvider;
 import com.example.demo.src.user.model.*;
@@ -37,6 +38,26 @@ public class StoreService {
         this.storeDao = storeDao;
         this.storeProvider = storeProvider;
         this.jwtService = jwtService;
+
+    }
+
+
+    public PatchHelpfulRes patchHelpful(int userIdx, int reviewIdx){
+        int exist=storeDao.checkHelpfulExist(userIdx,reviewIdx);
+        if(exist==1) {
+            char status = storeProvider.checkHelpful(userIdx, reviewIdx);
+            if (status == 'T') {
+                PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("F", userIdx, reviewIdx);
+                return patchHelpfulRes;
+            }
+            else{
+                PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("T", userIdx, reviewIdx);
+                return patchHelpfulRes;
+            }
+        } else{
+            PatchHelpfulRes patchHelpfulRes =storeDao.createHelpful("T",userIdx,reviewIdx);
+            return patchHelpfulRes;
+        }
 
     }
 

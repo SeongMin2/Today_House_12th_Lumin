@@ -144,6 +144,11 @@ public class StoreProvider {
     }
 
 
+    public char checkHelpful(int userIdx,int reviewIdx){
+        return storeDao.checkHelpful(userIdx,reviewIdx);
+    }
+
+
 
 
 }

@@ -122,4 +122,30 @@ public class StoreController {
 
 
 
+    @ResponseBody
+    @PatchMapping ("/product/review/{reviewIdx}/helpful")
+    public BaseResponse<PatchHelpfulRes> patchHelpful(@PathVariable("reviewIdx") int reviewIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                PatchHelpfulRes patchHelpfulRes = storeService.patchHelpful(userIdx,reviewIdx);
+                return new BaseResponse<>(patchHelpfulRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+
+
+
+
+
+
 }

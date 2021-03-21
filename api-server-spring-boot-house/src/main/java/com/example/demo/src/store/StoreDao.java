@@ -594,4 +594,44 @@ public class StoreDao {
                 userIdx,productIdx);
     }
 
+
+    public int checkHelpfulExist(int userIdx,int reviewIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select status from Helpful\n" +
+                "where reviewIdx=? and userIdx=?) as helpfulExist", int.class,reviewIdx,userIdx);
+    }
+
+
+    public char checkHelpful(int userIdx,int reviewIdx){
+        return this.jdbcTemplate.queryForObject("select status from Helpful \n" +
+                "where reviewIdx=? and userIdx=?", char.class,reviewIdx,userIdx);
+    }
+
+
+
+    public PatchHelpfulRes patchHelpful(String status,int userIdx,int reviewIdx){
+        this.jdbcTemplate.update("UPDATE Helpful set status=? \n" +
+                        "where userIdx=? and reviewIdx=?",
+                status,userIdx,reviewIdx);
+        return this.jdbcTemplate.queryForObject("select status,userIdx,reviewIdx from Helpful\n" +
+                        "where userIdx=? and reviewIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new PatchHelpfulRes(
+                        rs.getInt("userIdx"),
+                        rs.getInt("reviewIdx"),
+                        rs.getString("status")),
+                userIdx,reviewIdx);
+    }
+
+
+    public PatchHelpfulRes createHelpful(String status, int userIdx, int reviewIdx){
+        this.jdbcTemplate.update("insert into Helpful (reviewIdx,userIdx,createdAt,status) VALUES (?,?,now(),?)",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                reviewIdx,userIdx,status);
+        return this.jdbcTemplate.queryForObject("select status,userIdx,reviewIdx from Helpful\n" +
+                        "where userIdx=? and reviewIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new PatchHelpfulRes(
+                        rs.getInt("userIdx"),
+                        rs.getInt("reviewIdx"),
+                        rs.getString("status")),
+                userIdx,reviewIdx);
+    }
+
 }
