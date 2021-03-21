@@ -326,7 +326,9 @@ public class StoreDao {
 
     public List<GetStoreProductReviewRes> getProductReview(int productIdx){
         return this.jdbcTemplate.query("select Review.idx,Review.userIdx,productIdx,User.userimageUrl,name as userName,starPoint,\n" +
-                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,imgUrl,content,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,\n" +
+                        "       Case when imgUrl is null then 'F'\n" +
+                        "           ELSE imgUrl END as imgUrl,content,\n" +
                         "       CASE WHEN helpfful.helpfulCount is Null THEN 0 #DATE_FORMAT(createdAt, '%Y년%m월%d일 %h시%i분%s초')\n" +
                         "         ELSE helpfful.helpfulCount END as helpful\n" +
                         "        from Review\n" +
@@ -353,6 +355,61 @@ public class StoreDao {
                 ),
                 productIdx);
     }
+
+
+
+
+    public List<GetStoreSetProductReviewRes> getSetProductReview(int productIdx){
+        return this.jdbcTemplate.query("select Review.idx,Review.userIdx,productIdx,setProducts.name,User.userimageUrl,User.name as userName,starPoint,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,\n" +
+                        "       Case when imgUrl is null then 'F'\n" +
+                        "           ELSE imgUrl END as imgUrl,content,\n" +
+                        "       CASE WHEN helpfful.helpfulCount is Null THEN 0 #DATE_FORMAT(createdAt, '%Y년%m월%d일 %h시%i분%s초')\n" +
+                        "         ELSE helpfful.helpfulCount END as helpful,setProducts.selectOrder\n" +
+                        "        from Review\n" +
+                        "inner join User\n" +
+                        "on User.idx=Review.userIdx\n" +
+                        "\n" +
+                        "left outer join (select reviewIdx,  COUNT(CASE WHEN Helpful.status='T' THEN 1 END) as helpfulCount from Helpful\n" +
+                        "group by reviewIdx) helpfful\n" +
+                        "on helpfful.reviewIdx=Review.idx\n" +
+                        "\n" +
+                        "inner join (select ho.idx,ho.relatedProduct,ho.selectOrder,Product.name from Product\n" +
+                        "inner join (select Product.idx, Product.name\n" +
+                        "     , setProductStatus\n" +
+                        "     ,RelatedP.relatedProduct as relatedProduct,RelatedP.selectOrder from Product  # SetRelation.productIdx부분이 null인 부분을 그냥 Product.idx로 넣기\n" +
+                        "\n" +
+                        "inner join (select Product.idx as productIdx,CASE WHEN SetRelation.productIdx is NULL THEN Product.idx\n" +
+                        "         ELSE SetRelation.productIdx END as relatedProduct, selectOrder from Product\n" +
+                        "left outer join SetRelation\n" +
+                        "on SetRelation.setProductIdx=Product.idx) RelatedP\n" +
+                        "on RelatedP.productIdx=Product.idx\n" +
+                        "\n" +
+                        "where Product.idx=?) ho\n" +
+                        "on ho.relatedProduct=Product.idx) setProducts\n" +
+                        "on setProducts.relatedProduct=Review.productIdx\n" +
+                        "\n" +
+                        "order by helpful DESC\n" +
+                        "LIMIT 3",
+                (rs, rowNum) -> new GetStoreSetProductReviewRes(
+                        rs.getInt("idx"),
+                        rs.getInt("userIdx"),
+                        rs.getInt("productIdx"),
+                        "선택 "+rs.getString("selectOrder")+". ",
+                        rs.getString("name"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("starPoint"),
+                        rs.getString("createdAt"),
+                        rs.getString("fromLocal"),
+                        rs.getString("imgUrl"),
+                        rs.getString("content")
+                ),
+                productIdx);
+    }
+
+
+
 
 
     public List<GetStoreSetProductRes> getSetProduct(int productIdx,int userIdx){
@@ -560,9 +617,11 @@ public class StoreDao {
 
 
 
-    public List<GetMoreReviewRes> getMoreReview(int userIdx,int productIdx){
+    public List<GetMoreReviewRes> getMoreReview(int userIdx,int productIdx,String order){
         return this.jdbcTemplate.query("select Review.idx,Review.userIdx,productIdx,User.userimageUrl,name as userName,starPoint,\n" +
-                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,imgUrl,content,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,\n" +
+                        "       Case when imgUrl is null then 'F'\n" +
+                        "           ELSE imgUrl END as imgUrl,content,\n" +
                         "       CASE WHEN helpfful.helpfulCount is Null THEN 0\n" +
                         "         ELSE helpfful.helpfulCount END as helpful,\n" +
                         "       CASE WHEN Helpful.status is Null THEN 'F'\n" +
@@ -577,7 +636,8 @@ public class StoreDao {
                         "left outer join Helpful\n" +
                         "on Helpful.reviewIdx=Review.idx and Helpful.userIdx=? # 이게 꿀팁이네\n" +
                         "\n" +
-                        "where productIdx=?",
+                        "where productIdx=?\n" +
+                        "order by "+order+" DESC",
                 (rs, rowNum) -> new GetMoreReviewRes(
                         rs.getInt("idx"),
                         rs.getInt("userIdx"),
@@ -596,9 +656,95 @@ public class StoreDao {
 
 
 
+
+    public List<GetMoreSetReviewRes> getMoreSetReview(int userIdx,int productIdx,String order){
+        return this.jdbcTemplate.query("select Review.idx,Review.userIdx,productIdx,setProducts.name,User.userimageUrl,User.name as userName,starPoint,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,\n" +
+                        "       Case when imgUrl is null then 'F'\n" +
+                        "           ELSE imgUrl END as imgUrl,content,\n" +
+                        "       CASE WHEN helpfful.helpfulCount is Null THEN 0\n" +
+                        "         ELSE helpfful.helpfulCount END as helpful,\n" +
+                        "       CASE WHEN Helpful.status is Null THEN 'F'\n" +
+                        "         ELSE Helpful.status END as helpfulStatus, setProducts.selectOrder from Review\n" +
+                        "inner join User\n" +
+                        "on User.idx=Review.userIdx\n" +
+                        "\n" +
+                        "left outer join (select reviewIdx,  COUNT(CASE WHEN Helpful.status='T' THEN 1 END) as helpfulCount from Helpful\n" +
+                        "group by reviewIdx) helpfful\n" +
+                        "on helpfful.reviewIdx=Review.idx\n" +
+                        "\n" +
+                        "left outer join Helpful\n" +
+                        "on Helpful.reviewIdx=Review.idx and Helpful.userIdx=? # 이게 꿀팁이네\n" +
+                        "\n" +
+                        "inner join (select ho.idx,ho.relatedProduct,ho.selectOrder,Product.name from Product\n" +
+                        "inner join (select Product.idx, Product.name\n" +
+                        "     , setProductStatus\n" +
+                        "     ,RelatedP.relatedProduct as relatedProduct,RelatedP.selectOrder from Product  # SetRelation.productIdx부분이 null인 부분을 그냥 Product.idx로 넣기\n" +
+                        "\n" +
+                        "inner join (select Product.idx as productIdx,CASE WHEN SetRelation.productIdx is NULL THEN Product.idx\n" +
+                        "         ELSE SetRelation.productIdx END as relatedProduct, selectOrder from Product\n" +
+                        "left outer join SetRelation\n" +
+                        "on SetRelation.setProductIdx=Product.idx) RelatedP\n" +
+                        "on RelatedP.productIdx=Product.idx\n" +
+                        "\n" +
+                        "where Product.idx=?) ho\n" +
+                        "on ho.relatedProduct=Product.idx) setProducts\n" +
+                        "on setProducts.relatedProduct=Review.productIdx\n" +
+                        "order by "+order+" DESC",
+                (rs, rowNum) -> new GetMoreSetReviewRes(
+                        rs.getInt("idx"),
+                        rs.getInt("userIdx"),
+                        rs.getInt("productIdx"),
+                        "선택 "+rs.getString("selectOrder")+". ",
+                        rs.getString("name"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("starPoint"),
+                        rs.getString("createdAt"),
+                        rs.getString("fromLocal"),
+                        rs.getString("imgUrl"),
+                        rs.getString("content"),
+                        rs.getString("helpful"),
+                        rs.getString("helpfulStatus")
+                ),
+                userIdx,productIdx);
+    }
+
+
+
+
+    public GetStoreMoreReviewFinal getMoreReviewFinal(int productIdx){
+        return this.jdbcTemplate.queryForObject("select Product.idx\n" +
+                        "     , CASE WHEN ROUND(AVG(ProductReview.starpoint),1) is null THEN 0\n" +
+                        "         ELSE ROUND(AVG(ProductReview.starpoint),1) END as starpoint,\n" +
+                        "       CASE WHEN SUM(ProductReview.reviewNum) is null THEN 0\n" +
+                        "         ELSE ROUND(SUM(ProductReview.reviewNum),0) END as reviewNum from Product\n" +
+                        "inner join (select Product.idx as productIdx,CASE WHEN SetRelation.productIdx is NULL THEN Product.idx\n" +
+                        "         ELSE SetRelation.productIdx END as relatedProduct from Product\n" +
+                        "left outer join SetRelation\n" +
+                        "on SetRelation.setProductIdx=Product.idx) RelatedP\n" +
+                        "on RelatedP.productIdx=Product.idx\n" +
+                        "\n" +
+                        "left outer join (select AVG(starpoint) as starpoint,COUNT(CASE WHEN Review.status='T' THEN 1 END) as reviewNum, Review.productIdx from Review\n" +
+                        "group by Review.productIdx) ProductReview\n" +
+                        "on ProductReview.productIdx=RelatedP.relatedProduct\n" +
+                        "\n" +
+                        "where Product.idx=?  # 제품결정\n" +
+                        "group by Product.idx",
+                (rs, rowNum) -> new GetStoreMoreReviewFinal(
+                        rs.getString("reviewNum"),
+                        rs.getString("starpoint")
+                ),
+                productIdx);
+    }
+
+
+
     public GetMoreReviewRes getOneReview(int userIdx,int reviewIdx){
         return this.jdbcTemplate.queryForObject("select Review.idx,Review.userIdx,productIdx,User.userimageUrl,name as userName,starPoint,\n" +
-                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,imgUrl,content,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,\n" +
+                        "       Case when imgUrl is null then 'F'\n" +
+                        "           ELSE imgUrl END as imgUrl,content,\n" +
                         "       CASE WHEN helpfful.helpfulCount is Null THEN 0\n" +
                         "         ELSE helpfful.helpfulCount END as helpful,\n" +
                         "       CASE WHEN Helpful.status is Null THEN 'F'\n" +
@@ -672,5 +818,7 @@ public class StoreDao {
                         rs.getString("status")),
                 userIdx,reviewIdx);
     }
+
+
 
 }

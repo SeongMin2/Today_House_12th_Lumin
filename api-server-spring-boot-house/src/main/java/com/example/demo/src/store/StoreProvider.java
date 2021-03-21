@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_PRODUCT;
@@ -63,8 +64,18 @@ public class StoreProvider {
             GetStoreProductInfoRes getStoreProductInfoRes = storeDao.getProductInfo(userIdx, productIdx);
 
             GetStoreProductStarRes getStoreProductStarRes = storeDao.getProductStar(productIdx);
-            List<GetStoreProductReviewRes> getStoreProductReviewRes = storeDao.getProductReview(productIdx);
-            GetStoreProductRes getStoreProductRes = new GetStoreProductRes(getStoreProductInfoRes, getStoreProductStarRes, getStoreProductReviewRes);
+            GetStoreProductRes getStoreProductRes = new GetStoreProductRes(getStoreProductInfoRes, getStoreProductStarRes);
+            if(storeDao.checkSetProduct(productIdx)==1){
+                List<GetStoreSetProductReviewRes> getStoreSetProductReviewRes = storeDao.getSetProductReview(productIdx);
+                getStoreProductRes.setSetProductReview(getStoreSetProductReviewRes);
+
+            }else{
+                List<GetStoreProductReviewRes> getStoreProductReviewRes = storeDao.getProductReview(productIdx);
+                getStoreProductRes.setReview(getStoreProductReviewRes);
+            }
+            //List<GetStoreProductReviewRes> getStoreProductReviewRes = storeDao.getProductReview(productIdx);
+
+
 
             for (int i = 0; i < getStoreProductImgRes.size(); i++) {
                 getStoreProductRes.getProductImg().add(getStoreProductImgRes.get(i).getImgUrl());
@@ -138,10 +149,36 @@ public class StoreProvider {
     }
 
 
-    public List<GetMoreReviewRes> getMoreReview (int userIdx, int productIdx){
-        List<GetMoreReviewRes> getMoreReviewRes = storeDao.getMoreReview(userIdx,productIdx);
+    public List<GetMoreReviewRes> getMoreReview (int userIdx, int productIdx,String order){
+        List<GetMoreReviewRes> getMoreReviewRes = storeDao.getMoreReview(userIdx,productIdx,order);
         return getMoreReviewRes;
     }
+
+
+    public GetStoreMoreReviewFinal getMoreReviewFinal(int userIdx, int productIdx,String order) throws BaseException{
+        int exist = storeDao.checkProduct(productIdx);
+        if(exist!=1){
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        }
+        else {
+            GetStoreMoreReviewFinal getStoreMoreReviewFinal = storeDao.getMoreReviewFinal(productIdx);
+            GetStoreProductStarRes getStoreProductStarRes = storeDao.getProductStar(productIdx);
+            if(storeDao.checkSetProduct(productIdx)==1){
+                List<GetMoreSetReviewRes> getMoreSetReviewRes = storeDao.getMoreSetReview(userIdx,productIdx,order);
+                getStoreMoreReviewFinal.setSetProductReview(getMoreSetReviewRes);
+            }else{
+                List<GetMoreReviewRes> getMoreReviewRes = storeDao.getMoreReview(userIdx, productIdx, order);
+                getStoreMoreReviewFinal.setReview(getMoreReviewRes);
+            }
+
+            getStoreMoreReviewFinal.setStarDistribution(getStoreProductStarRes);
+
+
+            return getStoreMoreReviewFinal;
+        }
+    }
+
+
 
 
     public GetMoreReviewRes getOneReview(int userIdx, int reviewIdx){

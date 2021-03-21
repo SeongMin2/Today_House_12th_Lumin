@@ -15,11 +15,11 @@ public class GetStoreProductRes {
     private GetStoreProductInfoRes productInfo;
     private List<GetStoreSetProductRes> setProduct = new ArrayList<>();
     private GetStoreProductStarRes starDistribution;
-    private List<GetStoreProductReviewRes> review;
-    public GetStoreProductRes(GetStoreProductInfoRes productInfo,GetStoreProductStarRes starDistribution,List<GetStoreProductReviewRes> review){
+    private List<GetStoreProductReviewRes> review = new ArrayList<>();
+    private List<GetStoreSetProductReviewRes> setProductReview =new ArrayList<>();
+    public GetStoreProductRes(GetStoreProductInfoRes productInfo,GetStoreProductStarRes starDistribution){
         this.productInfo=productInfo;
         this.starDistribution=starDistribution;
-        this.review=review;
     }
 
 }

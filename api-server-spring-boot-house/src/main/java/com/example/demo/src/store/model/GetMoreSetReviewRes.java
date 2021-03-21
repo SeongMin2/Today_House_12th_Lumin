@@ -1,15 +1,15 @@
 package com.example.demo.src.store.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-
-public class GetMoreReviewRes {
+public class GetMoreSetReviewRes {
     private int reviewIdx;
     private int userIdx;
+    private int productIdx;
+    private String productName;
     private String userImageUrl;
     private String userName;
     private String starPoint;
@@ -18,9 +18,11 @@ public class GetMoreReviewRes {
     private String content;
     private String helpfulNum;   // 0명이면 F
     private String helpfulStatus;
-    public GetMoreReviewRes(int reviewIdx,int userIdx,String userImageUrl,String userName,String starPoint,String createdAt,String fromLocal,String imgUrl,String content,String helpful,String helpfulStatus){
+    public GetMoreSetReviewRes(int reviewIdx,int userIdx,int productIdx,String selectOrder,String productName,String userImageUrl,String userName,String starPoint,String createdAt,String fromLocal,String imgUrl,String content,String helpful,String helpfulStatus){
         this.reviewIdx=reviewIdx;
         this.userIdx=userIdx;
+        this.productIdx=productIdx;
+        this.productName=selectOrder+productName;
         this.userImageUrl=userImageUrl;
         this.userName=userName;
         this.starPoint=starPoint;
@@ -41,12 +43,14 @@ public class GetMoreReviewRes {
         }
         this.helpfulStatus=helpfulStatus;
     }
-
 }
 
 /*
 rs.getInt("idx"),
                         rs.getInt("userIdx"),
+                        rs.getInt("productIdx"),
+                        rs.getInt("selectOrder"),
+                        rs.getString("name"),
                         rs.getString("userimageUrl"),
                         rs.getString("userName"),
                         rs.getString("starPoint"),
