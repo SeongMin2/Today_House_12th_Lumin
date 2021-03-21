@@ -57,15 +57,35 @@ public class HomeController {
     @ResponseBody
     @GetMapping("/picture") // (GET) 127.0.0.1:9000/app/users
     public BaseResponse<List<GetPictureRes>> getPicture() {
-        List<GetPictureRes> getPictureRes = homeProvider.getPicture();
-        return new BaseResponse<>(getPictureRes);
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<GetPictureRes> getPictureRes = homeProvider.getPicture(userIdx);
+                return new BaseResponse<>(getPictureRes);
+            }
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
     @ResponseBody
     @GetMapping("/picture/{picturepostIdx}/comments")
     public BaseResponse<List<GetPictureReviewRes>> getReviews(@PathVariable("picturepostIdx") int picturepostIdx) {
-        List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(picturepostIdx);
-        return new BaseResponse<>(getPictureReviewRes);
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(picturepostIdx,userIdx);
+                return new BaseResponse<>(getPictureReviewRes);
+            }
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
 

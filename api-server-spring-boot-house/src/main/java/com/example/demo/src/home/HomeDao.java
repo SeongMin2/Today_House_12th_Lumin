@@ -57,7 +57,7 @@ public class HomeDao {
                 userIdx);
     }
 
-    public List<GetPictureRes> getPicture(){
+    public List<GetPictureRes> getPicture(int userIdx){
         return this.jdbcTemplate.query("select p.idx as picturepostIdx,\n" +
                         "       p.userIdx,\n" +
                         "       u.userimageUrl,\n" +
@@ -77,7 +77,7 @@ public class HomeDao {
                 );
     }
 
-    public List<GetPictureReviewRes> getReviews(int picturepostIdx){
+    public List<GetPictureReviewRes> getReviews(int picturepostIdx,int userIdx){
         return this.jdbcTemplate.query("select p.idx as commentIdx,p.picturepostIdx, p.userIdx, u.userimageUrl,u.name as userName\n" +
                         "       ,p.comment,\n" +
                         "       case\n" +

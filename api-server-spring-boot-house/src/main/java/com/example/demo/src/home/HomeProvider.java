@@ -38,13 +38,13 @@ public class HomeProvider {
         return getHousewarmingRes;
     }
 
-    public List<GetPictureRes> getPicture() {
-        List<GetPictureRes> getPictureRes = homeDao.getPicture();
+    public List<GetPictureRes> getPicture(int userIdx) {
+        List<GetPictureRes> getPictureRes = homeDao.getPicture(userIdx);
         return getPictureRes;
     }
 
-    public List<GetPictureReviewRes> getReviews(int picturepostIdx) {
-        List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(picturepostIdx);
+    public List<GetPictureReviewRes> getReviews(int picturepostIdx,int userIdx) {
+        List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(picturepostIdx,userIdx);
         return getPictureReviewRes;
     }
 
