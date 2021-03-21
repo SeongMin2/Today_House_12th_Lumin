@@ -122,6 +122,29 @@ public class StoreController {
 
 
 
+
+    @ResponseBody
+    @GetMapping("/product/review/{reviewIdx}")
+    public BaseResponse<GetMoreReviewRes> getOneReview(@PathVariable("reviewIdx")int reviewIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetMoreReviewRes getOneReviewRes = storeProvider.getOneReview(userIdx,reviewIdx);
+                return new BaseResponse<>(getOneReviewRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
+
     @ResponseBody
     @PatchMapping ("/product/review/{reviewIdx}/helpful")
     public BaseResponse<PatchHelpfulRes> patchHelpful(@PathVariable("reviewIdx") int reviewIdx) throws BaseException {

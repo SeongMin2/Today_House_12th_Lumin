@@ -144,6 +144,12 @@ public class StoreProvider {
     }
 
 
+    public GetMoreReviewRes getOneReview(int userIdx, int reviewIdx){
+        GetMoreReviewRes getOneReviewRes = storeDao.getOneReview(userIdx,reviewIdx);
+        return getOneReviewRes;
+    }
+
+
     public char checkHelpful(int userIdx,int reviewIdx){
         return storeDao.checkHelpful(userIdx,reviewIdx);
     }

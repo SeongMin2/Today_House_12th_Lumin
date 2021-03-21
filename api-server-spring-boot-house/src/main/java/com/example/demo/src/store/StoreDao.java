@@ -595,6 +595,45 @@ public class StoreDao {
     }
 
 
+
+    public GetMoreReviewRes getOneReview(int userIdx,int reviewIdx){
+        return this.jdbcTemplate.queryForObject("select Review.idx,Review.userIdx,productIdx,User.userimageUrl,name as userName,starPoint,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,imgUrl,content,\n" +
+                        "       CASE WHEN helpfful.helpfulCount is Null THEN 0\n" +
+                        "         ELSE helpfful.helpfulCount END as helpful,\n" +
+                        "       CASE WHEN Helpful.status is Null THEN 'F'\n" +
+                        "         ELSE Helpful.status END as helpfulStatus from Review\n" +
+                        "inner join User\n" +
+                        "on User.idx=Review.userIdx\n" +
+                        "\n" +
+                        "left outer join (select reviewIdx,  COUNT(CASE WHEN Helpful.status='T' THEN 1 END) as helpfulCount from Helpful\n" +
+                        "group by reviewIdx) helpfful\n" +
+                        "on helpfful.reviewIdx=Review.idx\n" +
+                        "\n" +
+                        "left outer join Helpful\n" +
+                        "on Helpful.reviewIdx=Review.idx and Helpful.userIdx=? # 이게 꿀팁이네\n" +
+                        "\n" +
+                        "where Review.idx=?",
+                (rs, rowNum) -> new GetMoreReviewRes(
+                        rs.getInt("idx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("starPoint"),
+                        rs.getString("createdAt"),
+                        rs.getString("fromLocal"),
+                        rs.getString("imgUrl"),
+                        rs.getString("content"),
+                        rs.getString("helpful"),
+                        rs.getString("helpfulStatus")
+                ),
+                userIdx,reviewIdx);
+    }
+
+
+
+
+
     public int checkHelpfulExist(int userIdx,int reviewIdx){
         return this.jdbcTemplate.queryForObject("select Exists(select status from Helpful\n" +
                 "where reviewIdx=? and userIdx=?) as helpfulExist", int.class,reviewIdx,userIdx);

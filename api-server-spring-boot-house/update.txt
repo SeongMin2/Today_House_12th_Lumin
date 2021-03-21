@@ -85,7 +85,13 @@ BaseResponseStatus 수정
 GetMoreReviewRes 모델 추가
 GetProductOptionDetailRes 모델 수정
 리뷰 더보기를 구현
+app/stores/product/:productIdx/review
 
 2021.03.21(루민)
 PatchHelpfulRes 모델 추가
 리뷰 및의 도움이 되었는지 버튼 활성화 비활성화 기능 구현
+app/stores/product/review/:reviewIdx/helpful
+
+2021.03.22(루민)
+특정 리뷰 하나만 불러오는 api 추가적으로 만듬
+app/stores/product/review/:reviewIdx
