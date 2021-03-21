@@ -123,7 +123,7 @@ public class StoreProvider {
                             } else {
                                 getProductOptionRes.get(i).getOptionDetail().get(h).setPrice(getProductOptionDetailRes.get(k).getPrice() + "원");
                             }
-                            
+
                             h++;
                         }
                     }
@@ -135,6 +135,12 @@ public class StoreProvider {
             return getProductOptionFinalRes;
         }
 
+    }
+
+
+    public List<GetMoreReviewRes> getMoreReview (int userIdx, int productIdx){
+        List<GetMoreReviewRes> getMoreReviewRes = storeDao.getMoreReview(userIdx,productIdx);
+        return getMoreReviewRes;
     }
 
 

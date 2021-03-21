@@ -12,6 +12,7 @@ public class GetProductOptionDetailRes {
     private int optionIdx;
     private int productIdx;
     private String name;
+    private int priceForCalculate;
     private String price;
     private String status;  // 품절 여부
 }

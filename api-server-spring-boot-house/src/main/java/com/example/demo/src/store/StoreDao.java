@@ -460,6 +460,7 @@ public class StoreDao {
                         rs.getInt("optionIdx"),
                         rs.getInt("productIdx"),
                         rs.getString("name"),
+                        rs.getInt("price"),
                         formatter.format(rs.getInt("price")),
                         rs.getString("status")
                 ),
@@ -529,6 +530,7 @@ public class StoreDao {
     }
 
 
+
     public int getMaxPrice(int productIdx){
         return this.jdbcTemplate.queryForObject("select Max(price) as maxPrice from ProductOption\n" +
                 "inner join OptionContent\n" +
@@ -537,6 +539,8 @@ public class StoreDao {
                 "where productIdx=? and ProductOption.required='T'\n" +
                 "order by price",int.class,productIdx);
     }
+
+
 
     public int getMinPrice(int productIdx){
         return this.jdbcTemplate.queryForObject("select Min(price) as maxPrice from ProductOption\n" +
@@ -548,10 +552,46 @@ public class StoreDao {
     }
 
 
+
     public int checkProduct(int productIdx){
         return this.jdbcTemplate.queryForObject("select EXISTS(select * from Product\n" +
                 "where idx=?) as exist",int.class,productIdx);
     }
 
+
+
+    public List<GetMoreReviewRes> getMoreReview(int userIdx,int productIdx){
+        return this.jdbcTemplate.query("select Review.idx,Review.userIdx,productIdx,User.userimageUrl,name as userName,starPoint,\n" +
+                        "       DATE_FORMAT(Review.createdAt,'%Y.%m.%d') as createdAt,fromLocal,imgUrl,content,\n" +
+                        "       CASE WHEN helpfful.helpfulCount is Null THEN 0\n" +
+                        "         ELSE helpfful.helpfulCount END as helpful,\n" +
+                        "       CASE WHEN Helpful.status is Null THEN 'F'\n" +
+                        "         ELSE Helpful.status END as helpfulStatus from Review\n" +
+                        "inner join User\n" +
+                        "on User.idx=Review.userIdx\n" +
+                        "\n" +
+                        "left outer join (select reviewIdx,  COUNT(CASE WHEN Helpful.status='T' THEN 1 END) as helpfulCount from Helpful\n" +
+                        "group by reviewIdx) helpfful\n" +
+                        "on helpfful.reviewIdx=Review.idx\n" +
+                        "\n" +
+                        "left outer join Helpful\n" +
+                        "on Helpful.reviewIdx=Review.idx and Helpful.userIdx=? # 이게 꿀팁이네\n" +
+                        "\n" +
+                        "where productIdx=?",
+                (rs, rowNum) -> new GetMoreReviewRes(
+                        rs.getInt("idx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("userimageUrl"),
+                        rs.getString("userName"),
+                        rs.getString("starPoint"),
+                        rs.getString("createdAt"),
+                        rs.getString("fromLocal"),
+                        rs.getString("imgUrl"),
+                        rs.getString("content"),
+                        rs.getString("helpful"),
+                        rs.getString("helpfulStatus")
+                ),
+                userIdx,productIdx);
+    }
 
 }

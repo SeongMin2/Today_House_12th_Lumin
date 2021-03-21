@@ -101,6 +101,25 @@ public class StoreController {
 
 
 
+    @ResponseBody
+    @GetMapping("/product/{productIdx}/review")
+    public BaseResponse<List<GetMoreReviewRes>> getMoreReview(@PathVariable("productIdx")int productIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<GetMoreReviewRes> getMoreReviewRes = storeProvider.getMoreReview(userIdx,productIdx);
+                return new BaseResponse<>(getMoreReviewRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
 
 }
