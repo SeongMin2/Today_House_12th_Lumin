@@ -95,3 +95,9 @@ app/stores/product/review/:reviewIdx/helpful
 2021.03.22(루민)
 특정 리뷰 하나만 불러오는 api 추가적으로 만듬
 app/stores/product/review/:reviewIdx
+
+2021.03.22(코트)
+사진 화면 ,사진댓글화면 전부 jwt 적용했습니다
+
+scrap 기능 추가했습니다
+app/scrap/:evalableIdx/:contentIdx
