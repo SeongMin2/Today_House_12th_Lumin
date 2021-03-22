@@ -37,6 +37,8 @@ public enum BaseResponseStatus {
     USERS_INVALID_ACCESS(false,2023,"본인만 접근 가능합니다."),
     NON_EXISTENT_PRODUCT(false,2024,"존재하지 않는 상품입니다."),
     NON_EXISTENT_REVIEW(false,2025,"존재하지 않는 리뷰입니다."),
+    NOT_COMPLETED_REVIEW(false,2026,"필수 입력 사항을 확인해주세요"),
+    INVALID_PRODUCT(false,2027,"세트형 상품에는 리뷰를 작성할 수 없습니다."),
 
 
 
@@ -52,6 +54,7 @@ public enum BaseResponseStatus {
     POST_USERS_NONEXIST_ACCOUNT(false,3014,"아이디 또는 비밀번호가 잘못되었습니다."),
     ALREADY_LOGGED(false,3015,"이미 로그인되어 있습니다"),
     ALREADY_LOGOUT(false,3016,"이미 로그아웃되어 있습니다."),
+    ALREADY_WRITTEN_REVIEW(false,3017,"이미 리뷰를 작성한 제품입니다."),
 
 
     /**

@@ -16,8 +16,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_PRODUCT;
-import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_REVIEW;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class StoreProvider {
@@ -194,6 +193,27 @@ public class StoreProvider {
         else{
             throw new BaseException(NON_EXISTENT_REVIEW);
         }
+
+    }
+
+
+    public GetReviewPageRes getReviewPage(int productIdx, int userIdx) throws BaseException{
+        if(storeDao.checkProduct(productIdx)!=1){
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        }
+        else if(storeDao.checkSetProduct(productIdx)==1){
+            throw new BaseException(INVALID_PRODUCT);
+        }
+        else if(storeDao.checkReviewByUser(userIdx,productIdx)==1){
+            throw new BaseException(ALREADY_WRITTEN_REVIEW);
+        }
+        else{
+            GetReviewPageRes getReviewPageRes =storeDao.getReviewPage(productIdx);
+            getReviewPageRes.setUserIdx(userIdx);
+
+            return getReviewPageRes;
+        }
+
 
     }
 

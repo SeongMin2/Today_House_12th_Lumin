@@ -837,4 +837,45 @@ public class StoreDao {
 
 
 
+
+    public int createReview(PostReviewReq postReviewReq,int productIdx,int userIdx){
+        this.jdbcTemplate.update("insert into Review (userIdx,productIdx,createdAt,status,starPoint,imgUrl,content,fromLocal,agreement) Values (?,?,now(),'T',?,?,?,'F',?)",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                userIdx,productIdx,postReviewReq.getStarPoint(),postReviewReq.getImgUrl(),postReviewReq.getContent(),postReviewReq.getAgreement()
+                );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
+    public int checkReviewByUser(int userIdx, int productIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select * from Review\n" +
+                "where userIdx=? and productIdx=?) as exist", int.class,userIdx,productIdx);
+    }
+
+
+
+    public GetReviewPageRes getReviewPage(int productIdx){
+        return this.jdbcTemplate.queryForObject("select Product.idx,Brand.name as brandName,\n" +
+                        "       CASE WHEN TodayDeal.status is null then 'F'\n" +
+                        "           Else TodayDeal.status End as todayDeal\n" +
+                        "       ,Product.name,imgUrl from Product\n" +
+                        "inner join ProductImg\n" +
+                        "on ProductImg.productIdx=Product.idx\n" +
+                        "\n" +
+                        "inner join Brand\n" +
+                        "on Brand.idx=Product.brandIdx\n" +
+                        "\n" +
+                        "left outer join TodayDeal\n" +
+                        "on TodayDeal.productIdx=Product.idx\n" +
+                        "\n" +
+                        "where Product.idx=?\n" +
+                        "group by Product.idx",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new GetReviewPageRes(
+                        rs.getInt("idx"),
+                        "["+rs.getString("brandName")+"]",
+                        rs.getString("todayDeal"),
+                        rs.getString("name"),
+                        rs.getString("imgUrl")),
+                productIdx);
+    }
+
 }
