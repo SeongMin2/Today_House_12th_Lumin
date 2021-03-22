@@ -878,4 +878,19 @@ public class StoreDao {
                 productIdx);
     }
 
+
+    public int patchReview(PatchReviewReq patchReviewReq,int reviewIdx){
+        this.jdbcTemplate.update("update Review set updatedAt=now(),starPoint=?,imgUrl=?,content=?\n" +
+                        "where idx=?",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                patchReviewReq.getStarPoint(),patchReviewReq.getImgUrl(),patchReviewReq.getContent(),reviewIdx
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
+    public int checkReviewUser(int userIdx,int reviewIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select userIdx from Review\n" +
+                "where userIdx=? and idx=?) as exist",int.class ,userIdx,reviewIdx);
+    }
+
 }

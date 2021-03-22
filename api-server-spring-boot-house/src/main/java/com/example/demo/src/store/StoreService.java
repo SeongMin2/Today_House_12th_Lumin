@@ -93,4 +93,25 @@ public class StoreService {
 
 
 
+
+    public PatchReviewRes patchReview(PatchReviewReq patchReviewReq,int reviewIdx,int userIdx) throws BaseException {
+        if(storeDao.checkReview(reviewIdx)!=1){
+            throw new BaseException(NON_EXISTENT_REVIEW);
+        }
+        else if(storeDao.checkReviewUser(userIdx,reviewIdx)!=1){
+            throw new BaseException(INVALID_USER_ACCESS);
+        }
+        else if(patchReviewReq.getContent().length()>=20 && patchReviewReq.getStarPoint()>=1&&patchReviewReq.getStarPoint()<=5){
+            int rIdx = storeDao.patchReview(patchReviewReq,reviewIdx);
+            PatchReviewRes patchReviewRes = new PatchReviewRes(rIdx);
+
+            return patchReviewRes;
+        }
+        else{
+            throw new BaseException(NOT_COMPLETED_REVIEW);
+        }
+    }
+
+
+
 }
