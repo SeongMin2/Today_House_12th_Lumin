@@ -1,6 +1,7 @@
 package com.example.demo.src.home;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.config.secret.Secret;
 import com.example.demo.src.home.model.*;
 import com.example.demo.utils.AES128;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_POST;
 
 //Provider : Read의 비즈니스 로직 처리
 @Service
@@ -43,9 +45,32 @@ public class HomeProvider {
         return getPictureRes;
     }
 
-    public List<GetPictureReviewRes> getReviews(int picturepostIdx,int userIdx) {
-        List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(picturepostIdx,userIdx);
+    public List<GetPictureReviewRes> getReviews(int userIdx, int picturepostIdx) {
+        List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(userIdx,picturepostIdx);
         return getPictureReviewRes;
+    }
+
+    public GetPicturePostRes getPicturePost(int userIdx, int picturepostIdx) throws BaseException {
+        int exist = homeDao.checkPicturePost(picturepostIdx);
+        if(exist!=1){
+            throw new BaseException(NON_EXISTENT_POST);
+        }
+        else {
+            List<GetPictureListRes> getPictureListRes = homeDao.getPictureImg(picturepostIdx);
+            String comment=homeDao.getComment(picturepostIdx);
+            GetPicturePostRes getPicturePostRes = new GetPicturePostRes();
+            List<GetPictureReviewRes> getPictureReviewRes = homeDao.getReviews(userIdx,picturepostIdx);
+            getPicturePostRes.setReview(getPictureReviewRes);
+
+            //List<GetStoreProductReviewRes> getStoreProductReviewRes = storeDao.getProductReview(productIdx);
+            getPicturePostRes.setComment(comment);
+            for (int i = 0; i < getPictureListRes.size(); i++) {
+                getPicturePostRes.getPictureUrl().add(getPictureListRes.get(i).getPictureUrl());
+            }
+
+
+            return getPicturePostRes;
+        }
     }
 
 }

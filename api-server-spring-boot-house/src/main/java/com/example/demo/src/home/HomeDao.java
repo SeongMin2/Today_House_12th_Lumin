@@ -59,14 +59,14 @@ public class HomeDao {
 
     public List<GetPictureRes> getPicture(int userIdx){
         return this.jdbcTemplate.query("select p.idx as picturepostIdx,\n" +
-                        "       p.userIdx,\n" +
-                        "       u.userimageUrl,\n" +
-                        "       u.name as userName,\n" +
-                        "       p.comment,\n" +
-                        "       GROUP_CONCAT(pictureUrl) as pictureUrl\n" +
-                        "from PicturePost p\n" +
-                        "         inner join Pictures p2 on p.idx = p2.picturepostIdx\n" +
-                        "         inner join User u on u.idx = p.userIdx group by p.idx",
+                        "                               p.userIdx,\n" +
+                        "                               u.userimageUrl,\n" +
+                        "                               u.name as userName,\n" +
+                        "                               p.comment,\n" +
+                        "                               ANY_VALUE(pictureUrl) as pictureUrl\n" +
+                        "                        from PicturePost p\n" +
+                        "                                 inner join Pictures p2 on p.idx = p2.picturepostIdx\n" +
+                        "                                 inner join User u on u.idx = p.userIdx group by p.idx",
                 (rs, rowNum) -> new GetPictureRes(
                         rs.getInt("picturepostIdx"),
                         rs.getInt("userIdx"),
@@ -77,7 +77,7 @@ public class HomeDao {
                 );
     }
 
-    public List<GetPictureReviewRes> getReviews(int picturepostIdx,int userIdx){
+    public List<GetPictureReviewRes> getReviews(int userIdx,int picturepostIdx){
         return this.jdbcTemplate.query("select p.idx as commentIdx,p.picturepostIdx, p.userIdx, u.userimageUrl,u.name as userName\n" +
                         "       ,p.comment,\n" +
                         "       case\n" +
@@ -107,6 +107,23 @@ public class HomeDao {
                         rs.getString("comment"),
                         rs.getString("howmuchTime")),
                 picturepostIdx);
+    }
+
+    public int checkPicturePost(int picturepostIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select * from PicturePost\n" +
+                "where idx=?) as exist",int.class,picturepostIdx);
+    }
+    public List<GetPictureListRes> getPictureImg(int picturepostIdx){
+        return this.jdbcTemplate.query("select idx,picturepostIdx,pictureUrl from Pictures\n" +
+                        "where picturepostIdx=?",
+                (rs, rowNum) -> new GetPictureListRes(
+                        rs.getInt("idx"),
+                        rs.getString("pictureUrl")
+                ),
+                picturepostIdx);
+    }
+    public String getComment(int picturepostIdx){
+        return this.jdbcTemplate.queryForObject("select comment from PicturePost where idx = ?\n",String.class,picturepostIdx);
     }
 
 }
