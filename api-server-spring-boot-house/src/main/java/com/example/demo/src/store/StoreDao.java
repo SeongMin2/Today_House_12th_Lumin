@@ -884,7 +884,7 @@ public class StoreDao {
                         "where idx=?",  // insert,update,delete 부분은 다 update를 사용하면 됨
                 patchReviewReq.getStarPoint(),patchReviewReq.getImgUrl(),patchReviewReq.getContent(),reviewIdx
         );
-        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+        return reviewIdx;
     }
 
 
