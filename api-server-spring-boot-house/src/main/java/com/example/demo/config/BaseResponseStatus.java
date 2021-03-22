@@ -37,6 +37,7 @@ public enum BaseResponseStatus {
     USERS_INVALID_ACCESS(false,2023,"본인만 접근 가능합니다."),
     NON_EXISTENT_PRODUCT(false,2024,"존재하지 않는 상품입니다."),
     NON_EXISTENT_REVIEW(false,2025,"존재하지 않는 리뷰입니다."),
+    NON_EXISTENT_POST(false,2026,"존재하지 않는 게시글입니다."),
 
 
 

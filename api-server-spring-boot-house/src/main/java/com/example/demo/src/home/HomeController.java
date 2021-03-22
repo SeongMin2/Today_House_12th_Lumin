@@ -71,6 +71,7 @@ public class HomeController {
         }
     }
 
+
     @ResponseBody
     @GetMapping("/picture/{picturepostIdx}/comments")
     public BaseResponse<List<GetPictureReviewRes>> getReviews(@PathVariable("picturepostIdx") int picturepostIdx) {
@@ -80,7 +81,7 @@ public class HomeController {
             }
             else{
                 int userIdx=jwtService.getUserIdx();
-                List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(picturepostIdx,userIdx);
+                List<GetPictureReviewRes> getPictureReviewRes = homeProvider.getReviews(userIdx,picturepostIdx);
                 return new BaseResponse<>(getPictureReviewRes);
             }
         }catch(BaseException exception){
@@ -88,6 +89,24 @@ public class HomeController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/picture/{picturepostIdx}")
+    public BaseResponse<GetPicturePostRes> getPicturePost(@PathVariable("picturepostIdx")int picturepostIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetPicturePostRes getPicturePostRes = homeProvider.getPicturePost(userIdx,picturepostIdx);
+                return new BaseResponse<>(getPicturePostRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
 }
