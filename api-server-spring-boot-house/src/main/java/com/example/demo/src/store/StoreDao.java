@@ -828,4 +828,13 @@ public class StoreDao {
 
 
 
+    public String changeTDStatus(){
+        this.jdbcTemplate.update("UPDATE TodayDeal set status= Case when TIMESTAMPDIFF(SECOND,now(),TodayDeal.deadline)<=0 then 'F'\n" +
+                        "ELSE 'T' END\n" +
+                        "where status='T'");
+        return "변경완료";
+    }
+
+
+
 }
