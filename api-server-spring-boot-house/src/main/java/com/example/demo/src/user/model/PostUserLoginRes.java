@@ -9,10 +9,12 @@ import lombok.Setter;
 public class PostUserLoginRes {
     private String jwt;
     private int userIdx;
+    private String name;
     private String status = "로그인 성공!";
 
-    public PostUserLoginRes(String jwt,int userIdx){
+    public PostUserLoginRes(String jwt,int userIdx,String name){
         this.jwt=jwt;
         this.userIdx=userIdx;
+        this.name=name;
     }
 }

@@ -78,11 +78,14 @@ public class UserDao {
     }
 
 
-    public int recordLog(int userIdx,String status){
+    public String recordLog(int userIdx,String status){
         this.jdbcTemplate.update("insert into LogHistory (createdAt, userIdx,status ) VALUES (NOW(),?,?)",
                 userIdx,status
         );
-        return 1;
+        return this.jdbcTemplate.queryForObject("select name from User\n" +
+                        "where Idx=?",
+                String.class,
+                userIdx);
     }
 
 

@@ -79,23 +79,24 @@ public class UserService {
         //System.out.println("테스트1:"+postUserLoginReq.getEmailId());
 
         int userIdx = userProvider.checkAccount(postUserLoginReq.getEmailId(),postUserLoginReq.getPassword());
-
+        String name;
         if(userProvider.checkLogExist(userIdx)!=1){  // 신규로 처음 로그인하는 사람을 위한
-            int record = userDao.recordLog(userIdx,"I");
-            System.out.println("로그인 기록 :"+record);
+            name = userDao.recordLog(userIdx,"I");
+
         }
         else{
             if(userProvider.checkLog(userIdx).equals("I")){
                 throw new BaseException(ALREADY_LOGGED);
             }
-            int record = userDao.recordLog(userIdx,"I");
-            System.out.println("로그인 기록 :"+record);
+            name = userDao.recordLog(userIdx,"I");
+
         }
 
 
         //jwt발급
         String jwt = jwtService.createJwt(userIdx);
-        return new PostUserLoginRes(jwt,userIdx);
+
+        return new PostUserLoginRes(jwt,userIdx,name);
     }
 
 
