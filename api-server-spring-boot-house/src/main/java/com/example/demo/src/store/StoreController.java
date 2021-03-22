@@ -102,7 +102,7 @@ public class StoreController {
 
 
 
-
+/*
     @ResponseBody
     @GetMapping("/product/{productIdx}/review")
     public BaseResponse<List<GetMoreReviewRes>> getMoreReview(@PathVariable("productIdx")int productIdx,@RequestParam(required = false) String order) throws BaseException {
@@ -123,10 +123,10 @@ public class StoreController {
         }catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
-    }
+    } */
 
     @ResponseBody
-    @GetMapping("/productFinal/{productIdx}/review")
+    @GetMapping("/product/{productIdx}/review")
     public BaseResponse<GetStoreMoreReviewFinal> getMoreReviewFinal(@PathVariable("productIdx")int productIdx,@RequestParam(required = false) String order) throws BaseException {
         try{
             if(jwtService.getJwt()==null){

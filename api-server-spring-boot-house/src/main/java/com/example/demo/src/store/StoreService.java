@@ -42,22 +42,27 @@ public class StoreService {
     }
 
 
-    public PatchHelpfulRes patchHelpful(int userIdx, int reviewIdx){
-        int exist=storeDao.checkHelpfulExist(userIdx,reviewIdx);
-        if(exist==1) {
-            char status = storeProvider.checkHelpful(userIdx, reviewIdx);
-            if (status == 'T') {
-                PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("F", userIdx, reviewIdx);
+    public PatchHelpfulRes patchHelpful(int userIdx, int reviewIdx) throws BaseException {
+        if(storeDao.checkReview(reviewIdx)==1){
+            int exist=storeDao.checkHelpfulExist(userIdx,reviewIdx);
+            if(exist==1) {
+                char status = storeProvider.checkHelpful(userIdx, reviewIdx);
+                if (status == 'T') {
+                    PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("F", userIdx, reviewIdx);
+                    return patchHelpfulRes;
+                }
+                else{
+                    PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("T", userIdx, reviewIdx);
+                    return patchHelpfulRes;
+                }
+            } else{
+                PatchHelpfulRes patchHelpfulRes =storeDao.createHelpful("T",userIdx,reviewIdx);
                 return patchHelpfulRes;
             }
-            else{
-                PatchHelpfulRes patchHelpfulRes = storeDao.patchHelpful("T", userIdx, reviewIdx);
-                return patchHelpfulRes;
-            }
-        } else{
-            PatchHelpfulRes patchHelpfulRes =storeDao.createHelpful("T",userIdx,reviewIdx);
-            return patchHelpfulRes;
+        }else{
+            throw new BaseException(NON_EXISTENT_REVIEW);
         }
+
 
     }
 

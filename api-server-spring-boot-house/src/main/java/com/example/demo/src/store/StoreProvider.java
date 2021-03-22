@@ -1,6 +1,7 @@
 package com.example.demo.src.store;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.store.model.*;
 import com.example.demo.utils.JwtService;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_PRODUCT;
+import static com.example.demo.config.BaseResponseStatus.NON_EXISTENT_REVIEW;
 
 @Service
 public class StoreProvider {
@@ -181,9 +183,16 @@ public class StoreProvider {
 
 
 
-    public GetMoreReviewRes getOneReview(int userIdx, int reviewIdx){
-        GetMoreReviewRes getOneReviewRes = storeDao.getOneReview(userIdx,reviewIdx);
-        return getOneReviewRes;
+    public GetMoreReviewRes getOneReview(int userIdx, int reviewIdx) throws BaseException{
+        int exist = storeDao.checkReview(reviewIdx);
+        if(exist==1){
+            GetMoreReviewRes getOneReviewRes = storeDao.getOneReview(userIdx,reviewIdx);
+            return getOneReviewRes;
+        }
+        else{
+            throw new BaseException(NON_EXISTENT_REVIEW);
+        }
+
     }
 
 

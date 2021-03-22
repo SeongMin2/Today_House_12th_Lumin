@@ -102,7 +102,7 @@ public class StoreDao {
                         rs.getInt("evalableIdx"),
                         rs.getString("imgUrl"),
                         rs.getString("scrapStatus"),
-                        rs.getString("leftTime")+"일",
+                        rs.getString("leftTime"),
                         rs.getString("brandName"),
                         "[오늘의딜]"+rs.getString("productName"),
                         rs.getString("percent")+"%",
@@ -817,6 +817,13 @@ public class StoreDao {
                         rs.getInt("reviewIdx"),
                         rs.getString("status")),
                 userIdx,reviewIdx);
+    }
+
+
+
+    public int checkReview(int reviewIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select status from Review\n" +
+                "where idx=?) as exist", int.class,reviewIdx);
     }
 
 

@@ -26,7 +26,12 @@ public class GetStoreTDPDRes {
         this.evalableIdx=evalableIdx;
         this.imgUrl=imgUrl;
         this.scrapStatus=scrapStatus;
-        this.leftTime=leftTime;
+        if(leftTime.length()<=2){
+            this.leftTime=leftTime+"일";
+        }
+        else{
+            this.leftTime=leftTime;
+        }
         this.brandName=brandName;
         this.productName=productName;
         this.discount=discount;
