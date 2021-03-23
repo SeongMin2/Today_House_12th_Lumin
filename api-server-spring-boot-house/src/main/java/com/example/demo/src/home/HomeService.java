@@ -1,7 +1,6 @@
 package com.example.demo.src.home;
 
 
-
 import com.example.demo.config.BaseException;
 import com.example.demo.config.secret.Secret;
 import com.example.demo.src.home.model.*;
@@ -36,24 +35,55 @@ public class HomeService {
     }
 
     @Autowired
-    public HomeService(HomeDao homeDao, HomeProvider homeProvider,JwtService jwtService) {
+    public HomeService(HomeDao homeDao, HomeProvider homeProvider, JwtService jwtService) {
         this.homeDao = homeDao;
         this.homeProvider = homeProvider;
         this.jwtService = jwtService;
 
     }
 
-    public PostPictureReviewRes createPictureReview(PostPictureReviewReq postPictureReviewReq,int picturepostIdx,int userIdx) throws BaseException {
-        if(homeDao.checkPicturePost(picturepostIdx)!=1){
+    public PostPictureReviewRes createPictureReview(PostPictureReviewReq postPictureReviewReq, int picturepostIdx, int userIdx) throws BaseException {
+        if (homeDao.checkPicturePost(picturepostIdx) != 1) {
             throw new BaseException(NON_EXISTENT_POST);
-        }
-        else if(postPictureReviewReq.getComment().length()>0){
-            int reviewIdx = homeDao.createPictureReview(postPictureReviewReq,picturepostIdx,userIdx);
+        } else if (postPictureReviewReq.getComment().length() > 0) {
+            int reviewIdx = homeDao.createPictureReview(postPictureReviewReq, picturepostIdx, userIdx);
 
             return new PostPictureReviewRes(reviewIdx);
-        }
-        else{
+        } else {
             throw new BaseException(NON_EXISTENT_COMMENT);
         }
     }
+
+    public PatchPictureRes patchPicturePostStatus(int picturepostIdx, int userIdx) throws BaseException {
+
+        if (homeDao.checkPicturePost(picturepostIdx) != 1) {
+
+            throw new BaseException(NON_EXISTENT_POST);
+        } else if (homeDao.checkPictureUser(userIdx, picturepostIdx) != 1) {
+
+            throw new BaseException(INVALID_USER_ACCESS);
+        } else if (homeProvider.checkPicturePostStatus(userIdx, picturepostIdx) == 'T') {
+            PatchPictureRes patchPictureRes = homeDao.patchPicturePostStatus("F", userIdx, picturepostIdx);
+            return patchPictureRes;
+        } else {
+            throw new BaseException(ALREADY_DELETE_POST);
+        }
+    }
+
+    public PatchHWRes patchHWStatus(int hwIdx, int userIdx) throws BaseException {
+        if (homeDao.checkHW(hwIdx) != 1) {
+
+            throw new BaseException(NON_EXISTENT_POST);
+        } else if (homeDao.checkHWUser(userIdx, hwIdx) != 1) {
+
+            throw new BaseException(INVALID_USER_ACCESS);
+        } else if (homeProvider.checkHWStatus(userIdx, hwIdx) == 'T') {
+
+            PatchHWRes patchHWRes = homeDao.patchHWStatus("F", userIdx, hwIdx);
+            return patchHWRes;
+        } else {
+            throw new BaseException(ALREADY_DELETE_POST);
+        }
+    }
+
 }

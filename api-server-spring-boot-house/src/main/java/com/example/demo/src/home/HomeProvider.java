@@ -73,4 +73,11 @@ public class HomeProvider {
         }
     }
 
+    public char checkPicturePostStatus(int userIdx, int picturepostIdx){
+        return homeDao.checkPicturePostStatus(userIdx,picturepostIdx);
+    }
+    public char checkHWStatus(int userIdx, int hwIdx){
+        return homeDao.checkHWstatus(userIdx,hwIdx);
+    }
+
 }

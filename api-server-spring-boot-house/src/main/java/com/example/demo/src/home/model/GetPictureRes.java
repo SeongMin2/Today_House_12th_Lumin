@@ -14,6 +14,8 @@ import java.util.List;
 public class GetPictureRes {
     private int picturepostIdx;
     private int userIdx;
+    private int scrapCount;
+    private String scrapStaus;
     private String userimageUrl;
     private String userName;
     private String comment;

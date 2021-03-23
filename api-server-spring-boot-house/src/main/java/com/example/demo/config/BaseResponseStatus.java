@@ -43,6 +43,8 @@ public enum BaseResponseStatus {
     INVALID_USER_ACCESS(false,2029,"잘못된 사용자 접근입니다."),
     NON_EXISTENT_COMMENT(false,2030,"댓글을 입력해주세요."),
     INVALID_PRODUCT_COUPON_ACCESS(false,2031,"해당 상품에는 쿠폰이 존재하지 않습니다."),
+    ALREADY_DELETE_POST(false,2032,"이미 삭제된 게시글 입니다."),
+    NON_EVALABLE_EXIST(false,2033,"evalableIdx를 확인해주세요."),
 
 
 
