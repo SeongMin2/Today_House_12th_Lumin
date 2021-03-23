@@ -40,12 +40,8 @@ public enum BaseResponseStatus {
     NON_EXISTENT_POST(false,2026,"존재하지 않는 게시글입니다."),
     NOT_COMPLETED_REVIEW(false,2027,"필수 입력 사항을 확인해주세요"),
     INVALID_PRODUCT(false,2028,"세트형 상품에는 리뷰를 작성할 수 없습니다."),
-<<<<<<< Updated upstream
     INVALID_USER_ACCESS(false,2029,"잘못된 사용자 접근입니다."),
-=======
-    NON_EXISTENT_COMMENT(false,2029,"댓글을 입력해주세요."),
->>>>>>> Stashed changes
-
+    NON_EXISTENT_COMMENT(false,2030,"댓글을 입력해주세요."),
 
 
 
