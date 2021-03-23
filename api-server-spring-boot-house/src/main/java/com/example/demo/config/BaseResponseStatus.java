@@ -45,6 +45,8 @@ public enum BaseResponseStatus {
     INVALID_PRODUCT_COUPON_ACCESS(false,2031,"해당 상품에는 쿠폰이 존재하지 않습니다."),
     ALREADY_DELETE_POST(false,2032,"이미 삭제된 게시글 입니다."),
     NON_EVALABLE_EXIST(false,2033,"evalableIdx를 확인해주세요."),
+    NON_EXISTENT_COUPON(false,2034,"유효하지 않는 쿠폰입니다."),
+    ALREADY_ISSUED_COUPON(false,2035,"이미 발급된 쿠폰입니다."),
 
 
 

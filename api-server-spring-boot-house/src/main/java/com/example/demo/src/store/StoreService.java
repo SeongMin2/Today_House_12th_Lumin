@@ -113,5 +113,21 @@ public class StoreService {
     }
 
 
+    public PostCouponRes postCoupon(int userIdx,int couponIdx) throws BaseException{
+        if(storeDao.checkCoupon(couponIdx)!=1){
+            throw new BaseException(NON_EXISTENT_COUPON);
+        }
+        else if(storeDao.checkHasCoupon(userIdx,couponIdx)==1){
+            throw new BaseException(ALREADY_ISSUED_COUPON);
+        }
+        else{
+            int idx = storeDao.postCoupon(userIdx,couponIdx);
+            PostCouponRes postCouponRes = new PostCouponRes(idx);
+            return postCouponRes;
+        }
+
+    }
+
+
 
 }

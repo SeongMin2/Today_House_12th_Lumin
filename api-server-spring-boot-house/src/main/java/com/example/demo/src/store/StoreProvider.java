@@ -240,6 +240,8 @@ public class StoreProvider {
             throw new BaseException(INVALID_PRODUCT_COUPON_ACCESS);
 
         }else{
+            String changeCouponStatus=storeDao.changeCouponStatus(); // 쿠폰 만료인것 자동으로 비활성화시키기
+            System.out.println(changeCouponStatus);
             List<GetProductCouponRes> getProductCouponRes =storeDao.getProductCoupon(productIdx,userIdx);
             return getProductCouponRes;
         }

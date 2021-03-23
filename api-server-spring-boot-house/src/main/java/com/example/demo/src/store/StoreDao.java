@@ -944,4 +944,33 @@ public class StoreDao {
                 userIdx,productIdx);
     }
 
+
+    public int checkCoupon(int couponIdx) {
+        return this.jdbcTemplate.queryForObject("select Exists(select idx from Coupon\n" +
+                "where idx=? and status='T') as exist", int.class, couponIdx);
+    }
+
+    public int checkHasCoupon(int userIdx,int couponIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select status from CouponStatus\n" +
+                "where userIdx=? and couponIdx=?) as exist", int.class, userIdx,couponIdx);
+    }
+
+
+
+    public int postCoupon(int userIdx,int couponIdx){
+        this.jdbcTemplate.update("insert into CouponStatus (userIdx,couponIdx,createdAt,status) VALUES (?,?,now(),'T')",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                userIdx,couponIdx);
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public String changeCouponStatus(){
+        this.jdbcTemplate.update("UPDATE Coupon set status= Case when DATEDIFF(expiration,now())<=0 then 'F'\n" +
+                "ELSE 'T' END\n" +
+                "where status='T'");
+        return "쿠폰 비활성화 완료";
+    }
+
+
+
+
 }

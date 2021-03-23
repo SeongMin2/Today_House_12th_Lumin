@@ -1,9 +1,5 @@
 package com.example.demo.src.store;
 
-import com.example.demo.src.user.UserProvider;
-import com.example.demo.src.user.UserService;
-import com.example.demo.src.user.model.GetCheckEmailRes;
-import com.example.demo.src.user.model.PatchUserLogoutRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
@@ -17,7 +13,6 @@ import java.util.List;
 
 
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController
 @RequestMapping("/app/stores")
@@ -301,6 +296,28 @@ public class StoreController {
         }catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+
+
+    @ResponseBody
+    @PostMapping ("/coupon/{couponIdx}")
+    public BaseResponse<PostCouponRes> patchCoupon(@PathVariable("couponIdx") int couponIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                PostCouponRes postCouponRes = storeService.postCoupon(userIdx,couponIdx);
+                return new BaseResponse<>(postCouponRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 
 
