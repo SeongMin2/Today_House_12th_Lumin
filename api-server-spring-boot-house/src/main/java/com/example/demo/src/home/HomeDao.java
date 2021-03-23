@@ -126,4 +126,11 @@ public class HomeDao {
         return this.jdbcTemplate.queryForObject("select comment from PicturePost where idx = ?\n",String.class,picturepostIdx);
     }
 
+    public int createPictureReview(PostPictureReviewReq postPictureReviewReq,int picturepostIdx,int userIdx){
+        this.jdbcTemplate.update("insert into PicturesReview (userIdx,picturepostIdx,comment) Values (?,?,?)",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                userIdx,picturepostIdx,postPictureReviewReq.getComment()
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
 }

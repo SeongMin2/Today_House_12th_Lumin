@@ -108,5 +108,25 @@ public class HomeController {
         }
     }
 
+    @ResponseBody
+    @PostMapping("/picture/{picturepostIdx}/comment")
+    public BaseResponse<PostPictureReviewRes> createPictureReview(@RequestBody PostPictureReviewReq postPictureReviewReq,@PathVariable("picturepostIdx")int picturepostIdx ) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                PostPictureReviewRes postPictureReviewRes = homeService.createPictureReview(postPictureReviewReq,picturepostIdx,userIdx);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
+                return new BaseResponse<>(postPictureReviewRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
 
 }
