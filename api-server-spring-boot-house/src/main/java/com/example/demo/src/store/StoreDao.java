@@ -228,7 +228,9 @@ public class StoreDao {
                         "         ELSE ROUND(SUM(ProductReview.reviewNum),0) END as reviewNum\n" +
                         "     , specialStatus\n" +
                         "     , CASE WHEN Product.productInfo is Null THEN '0'\n" +
-                        "         ELSE Product.productInfo END as productInfoImgUrl from Product\n" +
+                        "         ELSE Product.productInfo END as productInfoImgUrl,\n" +
+                        "       Case when couponStatus.maxSalePrice is null then 0\n" +
+                        "            ElsE couponStatus.maxSalePrice End as couponStatus from Product\n" +
                         "left outer join TodayDeal\n" +
                         "on TodayDeal.productIdx=Product.idx\n" +
                         "\n" +
@@ -249,16 +251,23 @@ public class StoreDao {
                         "left outer join (select User.idx, User.name,contentIdx,evalableIdx,Scrap.status from User\n" +
                         "inner join Scrap\n" +
                         "on Scrap.userIdx = User.idx\n" +
-                        "where User.idx=?) ProductScrap\n" +
+                        "where User.idx=1) ProductScrap\n" +
                         "on ProductScrap.contentIdx=Product.idx and ProductScrap.evalableIdx=Product.evalableIdx\n" +
                         "\n" +
                         "inner join DeliveryandRefund\n" +
                         "on DeliveryandRefund.productIdx = Product.idx\n" +
                         "\n" +
                         "left outer join (select Scrap.contentIdx,COUNT(CASE WHEN Scrap.status='T' THEN 1 END) as scrapCount from Scrap\n" +
-                        "where evalableIdx=2\n" +
+                        "where evalableIdx=?\n" +
                         "group by contentIdx) scrapNum\n" +
                         "on scrapNum.contentIdx=Product.idx\n" +
+                        "\n" +
+                        "left outer join (select productIdx,MAX(saleRange) as maxSalePrice from Coupon\n" +
+                        "inner join CouponProduct\n" +
+                        "on CouponProduct.couponIdx=Coupon.idx\n" +
+                        "group by CouponProduct.productIdx) couponStatus\n" +
+                        "on couponStatus.productIdx=Product.idx\n" +
+                        "\n" +
                         "\n" +
                         "where Product.idx=?  # 제품결정\n" +
                         "group by Product.idx",
@@ -282,7 +291,8 @@ public class StoreDao {
                         formatter.format(rs.getInt("additionalCost")),
                         rs.getString("setProductStatus"),
                         rs.getString("starpoint"),
-                        "("+rs.getString("reviewNum")+")"
+                        "("+rs.getString("reviewNum")+")",
+                        formatter.format(rs.getInt("couponStatus"))
                         ),
                 userIdx,productIdx);
     }

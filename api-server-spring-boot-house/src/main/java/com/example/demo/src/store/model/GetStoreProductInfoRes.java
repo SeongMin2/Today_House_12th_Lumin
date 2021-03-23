@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class GetStoreProductInfoRes {
     private String setProductStatus;
     private String starPoint;
     private String reviewNum;
+    private String couponStatus;
 
     public GetStoreProductInfoRes(int productIdx,String scrapStatus,String scrapCount,String leftTime,String brandName,String productName,String percent,String originalPrice
             ,String salePrice,String specialStatus,String savePoint,String saveRate,String deliveryCost,String freeConditionPrice,String outDescription
-            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum){
+            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum,String couponStatus){
+        DecimalFormat formatter = new DecimalFormat("###,###");
         this.productIdx=productIdx;
         this.scrapStatus=scrapStatus;
         this.scrapCount=scrapCount;
@@ -88,6 +91,11 @@ public class GetStoreProductInfoRes {
         this.setProductStatus=setProductStatus;
         this.starPoint=starPoint;
         this.reviewNum=reviewNum;
+        if(couponStatus.equals("0")){
+            this.couponStatus="F";
+        }else{
+            this.couponStatus="최대 "+couponStatus+"원 할인쿠폰";
+        }
 
     }
 
