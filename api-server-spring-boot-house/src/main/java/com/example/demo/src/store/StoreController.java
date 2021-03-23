@@ -259,6 +259,8 @@ public class StoreController {
     }
 
 
+    //아직 안한 놈 결제 부분
+/*
     @ResponseBody
     @PostMapping("/product/{productIdx}/immediate-purchase")
     public BaseResponse<PostReviewRes> getPayment(@RequestBody PostReviewReq postReviewReq,@PathVariable("productIdx")int productIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
@@ -277,6 +279,28 @@ public class StoreController {
             return new BaseResponse<>((exception.getStatus()));
         }
 
+    } */
+
+
+
+
+    @ResponseBody
+    @GetMapping("/product/{productIdx}/coupon")
+    public BaseResponse<List<GetProductCouponRes>> getProductCoupon(@PathVariable("productIdx")int productIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<GetProductCouponRes> getProductCouponRes = storeProvider.getProductCoupon(productIdx,userIdx);
+                return new BaseResponse<>(getProductCouponRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
 

@@ -232,5 +232,20 @@ public class StoreProvider {
 
 
 
+    public List<GetProductCouponRes> getProductCoupon(int productIdx,int userIdx) throws BaseException{
+        int exist = storeDao.checkProduct(productIdx);
+        if(exist!=1){
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        }else if(storeDao.checkProductCoupon(productIdx)!=1){
+            throw new BaseException(INVALID_PRODUCT_COUPON_ACCESS);
+
+        }else{
+            List<GetProductCouponRes> getProductCouponRes =storeDao.getProductCoupon(productIdx,userIdx);
+            return getProductCouponRes;
+        }
+    }
+
+
+
 
 }

@@ -123,3 +123,7 @@ app/stores/product/review/:reviewIdx
 
 2021.03.23(루민)
 ProductDetailImg TB를 추가하여서 상세정보페이지 이미지를 로드할 수 있도록 구현했습니다.
+
+GetProductCouponRes 모델을 추가하였으며
+/app/stores/product/:productIdx/coupon 
+상품의 쿠폰들 조회하는 api를 구현하였습니다.

@@ -42,6 +42,7 @@ public enum BaseResponseStatus {
     INVALID_PRODUCT(false,2028,"세트형 상품에는 리뷰를 작성할 수 없습니다."),
     INVALID_USER_ACCESS(false,2029,"잘못된 사용자 접근입니다."),
     NON_EXISTENT_COMMENT(false,2030,"댓글을 입력해주세요."),
+    INVALID_PRODUCT_COUPON_ACCESS(false,2031,"해당 상품에는 쿠폰이 존재하지 않습니다."),
 
 
 

@@ -292,7 +292,7 @@ public class StoreDao {
                         rs.getString("setProductStatus"),
                         rs.getString("starpoint"),
                         "("+rs.getString("reviewNum")+")",
-                        formatter.format(rs.getInt("couponStatus"))
+                        rs.getInt("couponStatus")
                         ),
                 userIdx,productIdx);
     }
@@ -911,6 +911,37 @@ public class StoreDao {
                         rs.getInt("idx"),
                         rs.getString("detailImgUrl")),
                 productIdx);
+    }
+
+
+    public int checkProductCoupon(int productIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select * from CouponProduct\n" +
+                "where productIdx=?) as exist", int.class,productIdx);
+    }
+
+
+
+    public List<GetProductCouponRes> getProductCoupon(int productIdx,int userIdx){
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return this.jdbcTemplate.query("select Coupon.idx, name, maxPrice,\n" +
+                        "       DATEDIFF(expiration,now()) as leftDay,expiration, Coupon.status as couponStatus,saleRange,\n" +
+                        "       CASE when CouponStatus.status is null then 'T'\n" +
+                        "            ELSE 'F' END as receivable from Coupon\n" +
+                        "inner join CouponProduct\n" +
+                        "on CouponProduct.couponIdx=Coupon.idx\n" +
+                        "\n" +
+                        "left outer join CouponStatus\n" +
+                        "on CouponStatus.couponIdx=Coupon.idx and CouponStatus.userIdx=?\n" +
+                        "\n" +
+                        "where productIdx=? and Coupon.status='T'",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new GetProductCouponRes(
+                        rs.getInt("idx"),
+                        rs.getInt("saleRange"),
+                        rs.getString("name"),
+                        formatter.format(rs.getInt("maxPrice"))+"원 이상 구매시",
+                        rs.getString("leftDay")+"일 남음",
+                        rs.getString("receivable")),
+                userIdx,productIdx);
     }
 
 }

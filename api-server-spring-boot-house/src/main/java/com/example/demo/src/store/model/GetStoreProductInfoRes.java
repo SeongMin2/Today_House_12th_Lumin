@@ -34,7 +34,7 @@ public class GetStoreProductInfoRes {
 
     public GetStoreProductInfoRes(int productIdx,String scrapStatus,String scrapCount,String leftTime,String brandName,String productName,String percent,String originalPrice
             ,String salePrice,String specialStatus,String savePoint,String saveRate,String deliveryCost,String freeConditionPrice,String outDescription
-            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum,String couponStatus){
+            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum,int couponStatus){
         DecimalFormat formatter = new DecimalFormat("###,###");
         this.productIdx=productIdx;
         this.scrapStatus=scrapStatus;
@@ -91,10 +91,12 @@ public class GetStoreProductInfoRes {
         this.setProductStatus=setProductStatus;
         this.starPoint=starPoint;
         this.reviewNum=reviewNum;
-        if(couponStatus.equals("0")){
+        if(couponStatus==0){
             this.couponStatus="F";
+        }else if(couponStatus>=100){
+            this.couponStatus="최대 "+formatter.format(couponStatus)+"원 할인쿠폰";
         }else{
-            this.couponStatus="최대 "+couponStatus+"원 할인쿠폰";
+            this.couponStatus="최대 "+couponStatus+"% 할인쿠폰";
         }
 
     }
