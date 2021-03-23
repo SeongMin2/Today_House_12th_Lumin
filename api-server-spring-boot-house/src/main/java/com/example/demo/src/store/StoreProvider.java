@@ -2,6 +2,7 @@ package com.example.demo.src.store;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.config.Constant;
 import com.example.demo.src.store.model.*;
 import com.example.demo.utils.JwtService;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -66,6 +67,8 @@ public class StoreProvider {
 
             GetStoreProductInfoRes getStoreProductInfoRes = storeDao.getProductInfo(userIdx, productIdx);
 
+            List<GetStoreProductImgRes> getStoreProductDscImgRes = storeDao.getProductDscImg(productIdx);
+
             GetStoreProductStarRes getStoreProductStarRes = storeDao.getProductStar(productIdx);
             GetStoreProductRes getStoreProductRes = new GetStoreProductRes(getStoreProductInfoRes, getStoreProductStarRes);
             if(storeDao.checkSetProduct(productIdx)==1){
@@ -82,6 +85,10 @@ public class StoreProvider {
 
             for (int i = 0; i < getStoreProductImgRes.size(); i++) {
                 getStoreProductRes.getProductImg().add(getStoreProductImgRes.get(i).getImgUrl());
+            }
+
+            for (int i = 0; i < getStoreProductDscImgRes.size(); i++) {
+                getStoreProductRes.getProductDescriptionImg().add(getStoreProductDscImgRes.get(i).getImgUrl());
             }
 
             if (getStoreProductInfoRes.getSetProductStatus().equals("T")) {
@@ -143,6 +150,7 @@ public class StoreProvider {
                     }
 
                 }
+
                 getProductOptionFinalRes.setOption(getProductOptionRes);
             }
 

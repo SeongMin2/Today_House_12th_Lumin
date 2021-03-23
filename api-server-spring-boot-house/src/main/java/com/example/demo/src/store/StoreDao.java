@@ -282,8 +282,7 @@ public class StoreDao {
                         formatter.format(rs.getInt("additionalCost")),
                         rs.getString("setProductStatus"),
                         rs.getString("starpoint"),
-                        "("+rs.getString("reviewNum")+")",
-                        rs.getString("productInfoImgUrl")
+                        "("+rs.getString("reviewNum")+")"
                         ),
                 userIdx,productIdx);
     }
@@ -891,6 +890,17 @@ public class StoreDao {
     public int checkReviewUser(int userIdx,int reviewIdx){
         return this.jdbcTemplate.queryForObject("select Exists(select userIdx from Review\n" +
                 "where userIdx=? and idx=?) as exist",int.class ,userIdx,reviewIdx);
+    }
+
+
+
+    public List<GetStoreProductImgRes> getProductDscImg(int productIdx){
+        return this.jdbcTemplate.query("select idx,detailImgUrl from ProductDetailImg\n" +
+                        "where productIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new GetStoreProductImgRes(
+                        rs.getInt("idx"),
+                        rs.getString("detailImgUrl")),
+                productIdx);
     }
 
 }

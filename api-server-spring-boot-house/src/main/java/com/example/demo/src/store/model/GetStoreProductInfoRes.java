@@ -29,11 +29,10 @@ public class GetStoreProductInfoRes {
     private String setProductStatus;
     private String starPoint;
     private String reviewNum;
-    private String infoImgUrl;
 
     public GetStoreProductInfoRes(int productIdx,String scrapStatus,String scrapCount,String leftTime,String brandName,String productName,String percent,String originalPrice
             ,String salePrice,String specialStatus,String savePoint,String saveRate,String deliveryCost,String freeConditionPrice,String outDescription
-            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum,String infoImgUrl){
+            ,String limitedArea,String additionalCost,String setProductStatus,String starPoint,String reviewNum){
         this.productIdx=productIdx;
         this.scrapStatus=scrapStatus;
         this.scrapCount=scrapCount;
@@ -89,7 +88,6 @@ public class GetStoreProductInfoRes {
         this.setProductStatus=setProductStatus;
         this.starPoint=starPoint;
         this.reviewNum=reviewNum;
-        this.infoImgUrl=infoImgUrl;
 
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 public class GetStoreProductRes {
     private List<String> productImg = new ArrayList<>();
     private GetStoreProductInfoRes productInfo;
+    private List<String> productDescriptionImg = new ArrayList<>();
     private List<GetStoreSetProductRes> setProduct = new ArrayList<>();
     private GetStoreProductStarRes starDistribution;
     private List<GetStoreProductReviewRes> review = new ArrayList<>();
