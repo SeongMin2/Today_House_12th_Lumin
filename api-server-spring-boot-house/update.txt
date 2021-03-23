@@ -118,6 +118,7 @@ app/scrap/:evalableIdx/:contentIdx
 /app/stores/product/4/review-click
 /app/stores/product/7/review
 
+2021.03.23(루민)
 리뷰 수정을 구현하였습니다.
 app/stores/product/review/:reviewIdx
 
@@ -127,3 +128,9 @@ ProductDetailImg TB를 추가하여서 상세정보페이지 이미지를 로드
 GetProductCouponRes 모델을 추가하였으며
 /app/stores/product/:productIdx/coupon 
 상품의 쿠폰들 조회하는 api를 구현하였습니다.
+
+2021.03.23(코트)
+사진탭도 스크랩여부확인, 스크랩 갯수확인 추가했습니다.
+
+사진게시글 삭제 구현했습니다
+집들이게시글 삭제 구현했습니다
