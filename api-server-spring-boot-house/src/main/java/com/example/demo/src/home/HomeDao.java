@@ -61,30 +61,48 @@ public class HomeDao {
     }
 
     public List<GetPictureRes> getPicture(int userIdx){
-        return this.jdbcTemplate.query("select p.idx                 as picturepostIdx,\n" +
+        return this.jdbcTemplate.query("select p.idx                            as picturepostIdx,\n" +
                         "       (select count(Scrap.contentIdx)\n" +
                         "\n" +
                         "        FROM Scrap\n" +
                         "\n" +
                         "        WHERE Scrap.contentIdx = p.idx\n" +
                         "          AND Scrap.evalableIdx = p.evalableIdx\n" +
-                        "          and Scrap.status = 'T')                                                        as scrapCount,\n" +
+                        "          and Scrap.status = 'T')       as scrapCount,\n" +
                         "       Case\n" +
                         "           When ProductScrap.status is Null THEN 'F'\n" +
-                        "           ELSE ProductScrap.status END                                                  as scrapStatus,\n" +
+                        "           ELSE ProductScrap.status END as scrapStatus,\n" +
+                        "       (select count(Heart.contentIdx)\n" +
+                        "\n" +
+                        "        FROM Heart\n" +
+                        "\n" +
+                        "        WHERE Heart.contentIdx = p.idx\n" +
+                        "          AND Heart.evalableIdx = p.evalableIdx\n" +
+                        "          and Heart.status = 'T')       as heartCount,\n" +
+                        "       Case\n" +
+                        "           When Cotentheart.status is Null THEN 'F'\n" +
+                        "           ELSE Cotentheart.status END  as heartStatus,\n" +
+                        "       (select count(PicturesReview.idx) from PicturesReview where PicturesReview.picturepostIdx=p.idx) as reviewCount,\n" +
                         "       p.userIdx,\n" +
                         "       u.userimageUrl,\n" +
-                        "       u.name                as userName,\n" +
+                        "       u.name                           as userName,\n" +
                         "       p.comment,\n" +
-                        "       ANY_VALUE(pictureUrl) as pictureUrl\n" +
+                        "       ANY_VALUE(pictureUrl)            as pictureUrl\n" +
                         "from PicturePost p\n" +
-                        "    left outer join (select User.idx, User.name, contentIdx, evalableIdx, Scrap.status\n" +
+                        "         left outer join (select User.idx, User.name, contentIdx, evalableIdx, Scrap.status\n" +
                         "                          from User\n" +
                         "                                   inner join Scrap\n" +
                         "                                              on Scrap.userIdx = User.idx\n" +
                         "                          where User.idx = ?) ProductScrap\n" +
                         "                         on ProductScrap.contentIdx = p.idx and\n" +
                         "                            ProductScrap.evalableIdx = p.evalableIdx\n" +
+                        "         left outer join (select User.idx, User.name, contentIdx, evalableIdx, Heart.status\n" +
+                        "                          from User\n" +
+                        "                                   inner join Heart\n" +
+                        "                                              on Heart.userIdx = User.idx\n" +
+                        "                          where User.idx = ?) Cotentheart\n" +
+                        "                         on Cotentheart.contentIdx = p.idx and\n" +
+                        "                            Cotentheart.evalableIdx = p.evalableIdx\n" +
                         "         inner join User U\n" +
                         "                    on U.idx = p.userIdx\n" +
                         "         inner join Pictures p2 on p.idx = p2.picturepostIdx\n" +
@@ -96,11 +114,14 @@ public class HomeDao {
                         rs.getInt("userIdx"),
                         rs.getInt("scrapCount"),
                         rs.getString("scrapStatus"),
+                        rs.getInt("heartCount"),
+                        rs.getString("heartStatus"),
+                        rs.getInt("reviewCount"),
                         rs.getString("userimageUrl"),
                         rs.getString("userName"),
                         rs.getString("comment"),
                         rs.getString("pictureUrl")),
-                userIdx);
+                userIdx,userIdx);
     }
 
     public List<GetPictureReviewRes> getReviews(int userIdx,int picturepostIdx){
