@@ -8,12 +8,14 @@ import lombok.Setter;
 @Setter
 
 public class PatchScrapRes {
+    private int scrapIdx;
     private int userIdx;
     private int evalableIdx;
     private int contentIdx;
     private String status;
     private String result;
-    public PatchScrapRes(int userIdx,int evalableIdx,int contentIdx,String status){
+    public PatchScrapRes(int scrapIdx,int userIdx,int evalableIdx,int contentIdx,String status){
+        this.scrapIdx=scrapIdx;
         this.userIdx=userIdx;
         this.evalableIdx=evalableIdx;
         this.contentIdx=contentIdx;

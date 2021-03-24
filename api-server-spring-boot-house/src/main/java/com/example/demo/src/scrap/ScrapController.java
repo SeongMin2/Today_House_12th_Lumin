@@ -34,7 +34,7 @@ public class ScrapController {
 
 
     @ResponseBody
-    @PatchMapping ("/{evalableIdx}/{contentIdx}")
+    @PostMapping ("/{evalableIdx}/{contentIdx}")
     public BaseResponse<PatchScrapRes> patchScrapRes(@PathVariable("evalableIdx") int evalableIdx,@PathVariable("contentIdx") int contentIdx) throws BaseException {
         try{
             if(jwtService.getJwt()==null){

@@ -32,9 +32,10 @@ public class ScrapDao {
         this.jdbcTemplate.update("UPDATE Scrap set status=? \n" +
                         "where userIdx=? and evalableIdx=? and contentIdx=?",
                 status,userIdx,evalableIdx,contentIdx);
-        return this.jdbcTemplate.queryForObject("select status,userIdx,evalableIdx,contentIdx from Scrap\n" +
+        return this.jdbcTemplate.queryForObject("select idx as scrapIdx,status,userIdx,evalableIdx,contentIdx from Scrap\n" +
                         "where userIdx=? and evalableIdx=? and contentIdx=?",  // queryForObject는 하나만 반환할 때 사용
                 (rs, rowNum) -> new PatchScrapRes(
+                        rs.getInt("scrapIdx"),
                         rs.getInt("userIdx"),
                         rs.getInt("evalableIdx"),
                         rs.getInt("contentIdx"),
@@ -46,9 +47,10 @@ public class ScrapDao {
     public PatchScrapRes createScrap(String status, int userIdx,int evalableIdx,int contentIdx){
         this.jdbcTemplate.update("insert into Scrap (userIdx,evalableIdx,contentIdx,createdAt,status) VALUES (?,?,?,now(),?)",
                 userIdx,evalableIdx,contentIdx,status);
-        return this.jdbcTemplate.queryForObject("select userIdx,evalableIdx,contentIdx,status from Scrap\n" +
+        return this.jdbcTemplate.queryForObject("select idx as scrapIdx,userIdx,evalableIdx,contentIdx,status from Scrap\n" +
                         "where userIdx=? and evalableIdx=? and contentIdx=? ",
                 (rs, rowNum) -> new PatchScrapRes(
+                        rs.getInt("scrapIdx"),
                         rs.getInt("userIdx"),
                         rs.getInt("evalableIdx"),
                         rs.getInt("contentIdx"),
