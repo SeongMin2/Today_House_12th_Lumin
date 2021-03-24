@@ -148,7 +148,7 @@ public class HomeController {
 
     }
     @ResponseBody
-    @PatchMapping("/picture/{picturepostIdx}/delete")
+    @PatchMapping("/picture/{picturepostIdx}/status")
     public BaseResponse<PatchPictureRes> patchPicture(@PathVariable("picturepostIdx")int picturepostIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
         try {
             if (jwtService.getJwt() == null) {
@@ -164,7 +164,7 @@ public class HomeController {
         }
     }
     @ResponseBody
-    @PatchMapping("/house-warm/{hwIdx}/delete")
+    @PatchMapping("/house-warm/{hwIdx}/status")
     public BaseResponse<PatchHWRes> patchHW(@PathVariable("hwIdx")int hwIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
         try {
             if (jwtService.getJwt() == null) {
@@ -173,6 +173,23 @@ public class HomeController {
                 int userIdx = jwtService.getUserIdx();
                 PatchHWRes patchHWRes = homeService.patchHWStatus(hwIdx, userIdx);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
                 return new BaseResponse<>(patchHWRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/picture/comment/{commentIdx}/status")
+    public BaseResponse<PatchCommentRes> patchComment(@PathVariable("commentIdx")int hwIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
+        try {
+            if (jwtService.getJwt() == null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            } else {
+                int userIdx = jwtService.getUserIdx();
+                PatchCommentRes patchCommentRes = homeService.patchComment(hwIdx, userIdx);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
+                return new BaseResponse<>(patchCommentRes);
             }
 
         } catch (BaseException exception) {

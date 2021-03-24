@@ -186,9 +186,17 @@ public class HomeDao {
         return this.jdbcTemplate.queryForObject("select EXISTS(select * from Housewarming where idx=?\n" +
                 "    ) as exist",int.class,hwIdx);
     }
+    public int checkComment(int commentIdx){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select * from PicturesReview where idx=?\n" +
+                "    ) as exist",int.class,commentIdx);
+    }
     public int checkHWUser(int userIdx,int hwIdx){
         return this.jdbcTemplate.queryForObject("select Exists(select userIdx from Housewarming where userIdx = ? and idx = ?) as exist",
                 int.class ,userIdx,hwIdx);
+    }
+    public int checkCommentUser(int userIdx,int commentIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select userIdx from PicturesReview where userIdx = ? and idx = ?) as exist",
+                int.class ,userIdx,commentIdx);
     }
 
     public int checkPictureUser(int userIdx,int picturepostIdx){
@@ -203,6 +211,11 @@ public class HomeDao {
     public char checkHWstatus(int userIdx,int hwIdx){
         return this.jdbcTemplate.queryForObject("select status from Housewarming\n" +
                 "                where idx =? and userIdx=?", char.class,hwIdx,userIdx);
+    }
+
+    public char checkCommentstatus(int userIdx,int commentIdx){
+        return this.jdbcTemplate.queryForObject("select status from PicturesReview\n" +
+                "                where idx =? and userIdx=?", char.class,commentIdx,userIdx);
     }
 
     public PatchPictureRes patchPicturePostStatus(String status,int userIdx,int picturepostIdx){
@@ -229,6 +242,18 @@ public class HomeDao {
                         rs.getInt("hwIdx"),
                         rs.getString("status")),
                 userIdx,hwIdx);
+    }
+    public PatchCommentRes patchCommentStatus(String status,int userIdx,int commentIdx){
+        this.jdbcTemplate.update("UPDATE PicturesReview set status=? \n" +
+                        "where userIdx=? and idx=?",
+                status,userIdx,commentIdx);
+        return this.jdbcTemplate.queryForObject("select userIdx,idx as commentIdx,status from PicturesReview\n" +
+                        "where userIdx=? and idx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new PatchCommentRes(
+                        rs.getInt("userIdx"),
+                        rs.getInt("commentIdx"),
+                        rs.getString("status")),
+                userIdx,commentIdx);
     }
 
     public int checkHeartExist(int userIdx,int evalableIdx,int contentIdx){

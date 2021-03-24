@@ -88,6 +88,22 @@ public class HomeService {
         }
     }
 
+    public PatchCommentRes patchComment(int commentIdx, int userIdx) throws BaseException {
+        if (homeDao.checkComment(commentIdx) != 1) {
+
+            throw new BaseException(FAIL_DELETE_COMMENT);
+        } else if (homeDao.checkCommentUser(userIdx, commentIdx) != 1) {
+
+            throw new BaseException(INVALID_USER_ACCESS);
+        } else if (homeProvider.checkCommentStatus(userIdx, commentIdx) == 'T') {
+
+            PatchCommentRes patchCommentRes = homeDao.patchCommentStatus("F", userIdx, commentIdx);
+            return patchCommentRes;
+        } else {
+            throw new BaseException(ALREADY_DELETE_POST);
+        }
+    }
+
     @Transactional
     public PatchHeartRes patchHeart(int userIdx, int evalableIdx,int contentIdx) throws BaseException{
         int exist=homeDao.checkHeartExist(userIdx,evalableIdx,contentIdx);

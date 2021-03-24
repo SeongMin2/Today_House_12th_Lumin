@@ -87,6 +87,9 @@ public class HomeProvider {
     public char checkHWStatus(int userIdx, int hwIdx){
         return homeDao.checkHWstatus(userIdx,hwIdx);
     }
+    public char checkCommentStatus(int userIdx, int commentIdx){
+        return homeDao.checkCommentstatus(userIdx,commentIdx);
+    }
 
     public char checkHeart(int userIdx, int evalableIdx,int contentIdx){
         return homeDao.checkHeart(userIdx,evalableIdx,contentIdx);
