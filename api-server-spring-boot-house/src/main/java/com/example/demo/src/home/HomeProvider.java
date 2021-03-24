@@ -80,4 +80,8 @@ public class HomeProvider {
         return homeDao.checkHWstatus(userIdx,hwIdx);
     }
 
+    public char checkHeart(int userIdx, int evalableIdx,int contentIdx){
+        return homeDao.checkHeart(userIdx,evalableIdx,contentIdx);
+    }
+
 }

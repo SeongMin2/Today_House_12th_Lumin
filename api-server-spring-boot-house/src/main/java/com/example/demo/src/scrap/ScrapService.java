@@ -43,9 +43,12 @@ public class ScrapService {
     }
 
     @Transactional
-    public PatchScrapRes patchScrap(int userIdx, int evalableIdx,int contentIdx){
+    public PatchScrapRes patchScrap(int userIdx, int evalableIdx,int contentIdx) throws BaseException{
         int exist=scrapDao.checkScrapExist(userIdx,evalableIdx,contentIdx);
-        if(exist==1) {
+        if(scrapDao.checkEvalableExist(evalableIdx)==0 || evalableIdx==4){
+            throw new BaseException(NON_EVALABLE_EXIST);
+        }
+        else if(exist==1) {
             char status = scrapProvider.checkScrap(userIdx, evalableIdx,contentIdx);
             if (status == 'T') {
                 PatchScrapRes patchScrapRes = scrapDao.patchScrap("F", userIdx, evalableIdx,contentIdx);

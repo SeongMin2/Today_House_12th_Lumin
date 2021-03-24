@@ -19,6 +19,9 @@ public class ScrapDao {
 
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
+    public int checkEvalableExist(int evalableIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select * from Evalable where idx=?)",int.class,evalableIdx);
+    }
 
     public int checkScrapExist(int userIdx,int evalableIdx,int contentIdx){
         return this.jdbcTemplate.queryForObject("select Exists(select status from Scrap\n" +

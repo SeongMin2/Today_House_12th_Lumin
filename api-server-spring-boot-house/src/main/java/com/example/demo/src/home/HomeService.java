@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.sql.DataSource;
 
@@ -84,6 +86,29 @@ public class HomeService {
         } else {
             throw new BaseException(ALREADY_DELETE_POST);
         }
+    }
+
+    @Transactional
+    public PatchHeartRes patchHeart(int userIdx, int evalableIdx,int contentIdx) throws BaseException{
+        int exist=homeDao.checkHeartExist(userIdx,evalableIdx,contentIdx);
+        if(homeDao.checkEvalableExist(evalableIdx)==0 || evalableIdx==2){
+            throw new BaseException(NON_EVALABLE_EXIST);
+        }
+        else if(exist==1) {
+            char status = homeProvider.checkHeart(userIdx, evalableIdx,contentIdx);
+            if (status == 'T') {
+                PatchHeartRes patchHeartRes = homeDao.patchHeart("F", userIdx, evalableIdx,contentIdx);
+                return patchHeartRes;
+            }
+            else{
+                PatchHeartRes patchHeartRes = homeDao.patchHeart("T", userIdx,evalableIdx, contentIdx);
+                return patchHeartRes;
+            }
+        } else{
+            PatchHeartRes patchHeartRes =homeDao.createHeart("T",userIdx,evalableIdx,contentIdx);
+            return patchHeartRes;
+        }
+
     }
 
 }

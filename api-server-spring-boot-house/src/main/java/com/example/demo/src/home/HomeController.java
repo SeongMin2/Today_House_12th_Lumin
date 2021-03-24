@@ -159,4 +159,24 @@ public class HomeController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ResponseBody
+    @PostMapping ("/heart/{evalableIdx}/{contentIdx}")
+    public BaseResponse<PatchHeartRes> patchHeartRes(@PathVariable("evalableIdx") int evalableIdx,@PathVariable("contentIdx") int contentIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                PatchHeartRes patchHeartRes = homeService.patchHeart(userIdx,evalableIdx,contentIdx);
+                return new BaseResponse<>(patchHeartRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 }

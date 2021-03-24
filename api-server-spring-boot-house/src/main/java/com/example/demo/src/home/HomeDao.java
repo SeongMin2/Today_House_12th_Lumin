@@ -209,4 +209,45 @@ public class HomeDao {
                         rs.getString("status")),
                 userIdx,hwIdx);
     }
+
+    public int checkHeartExist(int userIdx,int evalableIdx,int contentIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select status from Heart\n" +
+                "where evalableIdx=? and contentIdx=? and userIdx=? ) as HeartExist", int.class,evalableIdx,contentIdx,userIdx);
+    }
+    public char checkHeart(int userIdx,int evalableIdx,int contentIdx){
+        return this.jdbcTemplate.queryForObject("select status from Heart \n" +
+                "where evalableIdx =? and contentIdx=? and userIdx=?", char.class,evalableIdx,contentIdx,userIdx);
+    }
+    public PatchHeartRes patchHeart(String status,int userIdx,int evalableIdx,int contentIdx){
+        this.jdbcTemplate.update("UPDATE Heart set status=? \n" +
+                        "where userIdx=? and evalableIdx=? and contentIdx=?",
+                status,userIdx,evalableIdx,contentIdx);
+        return this.jdbcTemplate.queryForObject("select idx as heartIdx,status,userIdx,evalableIdx,contentIdx from Heart\n" +
+                        "where userIdx=? and evalableIdx=? and contentIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new PatchHeartRes(
+                        rs.getInt("heartIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getInt("evalableIdx"),
+                        rs.getInt("contentIdx"),
+                        rs.getString("status")),
+                userIdx,evalableIdx,contentIdx);
+    }
+
+
+    public PatchHeartRes createHeart(String status, int userIdx,int evalableIdx,int contentIdx){
+        this.jdbcTemplate.update("insert into Heart (userIdx,evalableIdx,contentIdx,createdAt,status) VALUES (?,?,?,now(),?)",
+                userIdx,evalableIdx,contentIdx,status);
+        return this.jdbcTemplate.queryForObject("select idx as heartIdx,userIdx,evalableIdx,contentIdx,status from Heart\n" +
+                        "where userIdx=? and evalableIdx=? and contentIdx=? ",
+                (rs, rowNum) -> new PatchHeartRes(
+                        rs.getInt("heartIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getInt("evalableIdx"),
+                        rs.getInt("contentIdx"),
+                        rs.getString("status")),
+                userIdx,evalableIdx,contentIdx);
+    }
+    public int checkEvalableExist(int evalableIdx){
+        return this.jdbcTemplate.queryForObject("select Exists(select * from Evalable where idx=?)",int.class,evalableIdx);
+    }
 }
