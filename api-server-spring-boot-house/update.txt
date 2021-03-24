@@ -137,3 +137,6 @@ GetProductCouponRes 모델을 추가하였으며
 
 2021.03.24(루민)
 쿠폰 발급을 구현하였습니다.
+2021.03.24(코트)
+heart api 구현하고 heart테이블 userNo 컬럼 userIdx로 이름변경했습니다.
+게시글 댓글에도 좋아요가 있는데 댓글 evalableIdx는 4로 하겠습니다.

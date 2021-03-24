@@ -27,7 +27,15 @@ public class HomeProvider {
     private JdbcTemplate jdbcTemplate;
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public GetHomeMainRes getHomeMain (int userIdx) throws BaseException{
 
+        List<GetHousewarmingRes> getHousewarmingRes = homeDao.getHw(userIdx);
+        List<GetPictureRes>  getPictureRes = homeDao.getPicture(userIdx);
+
+        GetHomeMainRes getHomeMainRes = new GetHomeMainRes(getHousewarmingRes,getPictureRes);
+
+        return getHomeMainRes;
+    }
     @Autowired
     public HomeProvider(HomeDao homeDao,JwtService jwtService) {
 

@@ -35,6 +35,26 @@ public class HomeController {
         this.jwtService = jwtService;
     }
 
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<GetHomeMainRes> getHomeMain() throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetHomeMainRes getHomeMainRes = homeProvider.getHomeMain(userIdx);
+                return new BaseResponse<>(getHomeMainRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
     //Query String
     @ResponseBody
     @GetMapping("/house-warm") // (GET) 127.0.0.1:9000/app/users
