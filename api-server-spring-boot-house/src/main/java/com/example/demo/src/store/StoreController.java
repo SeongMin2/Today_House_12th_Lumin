@@ -322,6 +322,28 @@ public class StoreController {
 
 
 
+    @ResponseBody
+    @GetMapping("/product/{productIdx}/delivery-refund")
+    public BaseResponse<GetDandRFinalRes> getDandR(@PathVariable("productIdx")int productIdx) throws BaseException {
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetDandRFinalRes getDandRFinalRes = storeProvider.getDandR(productIdx);
+                return new BaseResponse<>(getDandRFinalRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
+
 
 
 

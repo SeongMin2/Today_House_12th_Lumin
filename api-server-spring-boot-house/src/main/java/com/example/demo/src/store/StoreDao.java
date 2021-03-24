@@ -972,5 +972,75 @@ public class StoreDao {
 
 
 
+    public List<GetDandRSetProductRes> getDSetProduct(int productIdx){
+        return this.jdbcTemplate.query("select Product.idx,RelatedP.selectOrder,ProductImg.imgUrl,\n" +
+                        "      Product.name as productName\n" +
+                        "     , CASE WHEN TodayDeal.status='T' then TRUNCATE((Product.fixedPrice-TodayDeal.salePrice)/Product.fixedPrice*100,0)\n" +
+                        "         ELSE TRUNCATE((Product.fixedPrice-Product.salePrice)/Product.fixedPrice*100,0) END as percent\n" +
+                        "     ,setProductStatus\n" +
+                        "     , RelatedP.relatedProduct as relatedProduct\n" +
+                        "      from Product\n" +
+                        "left outer join TodayDeal\n" +
+                        "on TodayDeal.productIdx=Product.idx\n" +
+                        "\n" +
+                        "inner join (select Product.idx as productIdx,CASE WHEN SetRelation.productIdx is NULL THEN Product.idx\n" +
+                        "         ELSE SetRelation.productIdx END as relatedProduct,selectOrder from Product\n" +
+                        "left outer join SetRelation\n" +
+                        "on SetRelation.setProductIdx=Product.idx\n" +
+                        "where Product.idx=?) RelatedP\n" +
+                        "on RelatedP.relatedProduct=Product.idx\n" +
+                        "\n" +
+                        "inner join (select imgUrl,productIdx from ProductImg\n" +
+                        "group by productIdx) ProductImg\n" +
+                        "on ProductImg.productIdx=Product.idx\n" +
+                        "\n" +
+                        "group by Product.idx",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new GetDandRSetProductRes(
+                        rs.getInt("idx"),
+                        rs.getString("selectOrder"),
+                        rs.getString("imgUrl"),
+                        rs.getString("productName")
+                ),
+                productIdx);
+    }
+
+
+
+    public List<GetDeliveryAndRefundRes> getDandR (int productIdx){
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return this.jdbcTemplate.query("select DeliveryandRefund.idx, delivery,\n" +
+                        "       deliveryCost,\n" +
+                        "       freeConditionPrice,payment,additionalCost,\n" +
+                        "      limitedArea,\n" +
+                        "       refundCost, exchangeCost, DeliveryandRefund.address,\n" +
+                        "       businessName,representative,DeliveryInfo.address as businessAddress,phoneNum,email,\n" +
+                        "       businessNum\n" +
+                        "       from DeliveryandRefund\n" +
+                        "inner join DeliveryInfo\n" +
+                        "on DeliveryInfo.productIdx=DeliveryandRefund.productIdx\n" +
+                        "where DeliveryandRefund.productIdx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new GetDeliveryAndRefundRes(
+                        rs.getInt("idx"),
+                        rs.getString("delivery"),
+                        rs.getString("deliveryCost"),
+                        formatter.format(rs.getInt("freeConditionPrice")),
+                        rs.getString("payment"),
+                        formatter.format(rs.getInt("additionalCost")),
+                        rs.getString("limitedArea"),
+                        rs.getInt("refundCost"),
+                        formatter.format(rs.getInt("exchangeCost")),
+                        rs.getString("address"),
+                        rs.getString("businessName"),
+                        rs.getString("representative"),
+                        rs.getString("businessAddress"),
+                        rs.getString("phoneNum"),
+                        rs.getString("email"),
+                        rs.getString("businessNum")
+                ),
+                productIdx);
+    }
+
+
+
 
 }

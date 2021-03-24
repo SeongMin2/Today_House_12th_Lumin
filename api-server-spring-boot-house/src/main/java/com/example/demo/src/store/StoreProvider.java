@@ -129,9 +129,11 @@ public class StoreProvider {
                 List<GetProductOptionRes> getProductOptionRes = storeDao.getProductOption(productIdx);
 
                 List<GetProductOptionDetailRes> getProductOptionDetailRes = storeDao.getProductOptionDetail(productIdx);
+                GetProductOptionDetailRes zero = new GetProductOptionDetailRes(0,0,0,"선택안함",0,"0","F");
 
                 for (int i = 0; i < getProductOptionRes.size(); i++) {
                     int h = 0;
+                    getProductOptionRes.get(i).getOptionDetail().add(zero);
                     for (int k = 0; k < getProductOptionDetailRes.size(); k++) {
                         if (getProductOptionRes.get(i).getOptionIdx() == getProductOptionDetailRes.get(k).getOptionIdx()) {
 
@@ -244,6 +246,30 @@ public class StoreProvider {
             System.out.println(changeCouponStatus);
             List<GetProductCouponRes> getProductCouponRes =storeDao.getProductCoupon(productIdx,userIdx);
             return getProductCouponRes;
+        }
+    }
+
+
+    public GetDandRFinalRes getDandR(int productIdx) throws BaseException{
+        if(storeDao.checkProduct(productIdx)!=1){
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        }
+        else if(storeDao.checkSetProduct(productIdx)==1){
+            List<GetDandRSetProductRes> getDandRSetProductRes = storeDao.getDSetProduct(productIdx);
+            GetDandRFinalRes getDandRFinalRes = new GetDandRFinalRes();
+            for(int i=0;i<getDandRSetProductRes.size();i++){
+                getDandRFinalRes.getSetProduct().add(getDandRSetProductRes.get(i));
+            }
+            return getDandRFinalRes;
+
+        }
+        else{
+            List<GetDeliveryAndRefundRes> getDeliveryAndRefundRes =storeDao.getDandR(productIdx);
+            GetDandRFinalRes getDandRFinalRes = new GetDandRFinalRes();
+            for(int i=0;i<getDeliveryAndRefundRes.size();i++){
+                getDandRFinalRes.getDeliveryAndRefund().add(getDeliveryAndRefundRes.get(i));
+            }
+            return getDandRFinalRes;
         }
     }
 
