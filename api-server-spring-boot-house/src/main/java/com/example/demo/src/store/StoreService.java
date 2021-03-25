@@ -248,6 +248,7 @@ public class StoreService {
             }
             String productName = storeDao.getProductName(productIdx);
             String userName = storeDao.getUserName(userIdx);
+            int totalPrice=postKakaoPayReadyReq.getTotalPrice() * postKakaoPayReadyReq.getNumber();
 
 
             String HOST = "https://kapi.kakao.com";
@@ -264,8 +265,8 @@ public class StoreService {
             body.add("partner_order_id", orderIdx+"");
             body.add("partner_user_id", userName);
             body.add("item_name", productName);
-            body.add("quantity", postKakaoPayReadyReq.getNumber());
-            body.add("total_amount", postKakaoPayReadyReq.getTotalPrice());
+            body.add("quantity", postKakaoPayReadyReq.getNumber()+"");
+            body.add("total_amount", totalPrice+"");
             body.add("tax_free_amount", "0");
             body.add("approval_url", "https://www.naver.com");
             body.add("cancel_url", "https://luminitworld.tistory.com/97");

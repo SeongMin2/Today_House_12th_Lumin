@@ -17,7 +17,7 @@ public class PostKakaoPayReadyReq {
     private String receiverPhoneNum;
     private String address;
     private String payment;
-    private String totalPrice;
+    private int totalPrice;
     private List<Integer> detailOption;
-    private String number;
+    private int number;
 }
