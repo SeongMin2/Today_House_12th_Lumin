@@ -251,6 +251,7 @@ public class StoreService {
             int totalPrice=postKakaoPayReadyReq.getTotalPrice() * postKakaoPayReadyReq.getNumber();
 
 
+
             String HOST = "https://kapi.kakao.com";
 
             RestTemplate restTemplate = new RestTemplate();

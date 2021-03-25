@@ -176,4 +176,29 @@ public class UserDao {
 
 
 
+    public int postJwt(String jwt){
+        this.jdbcTemplate.update("insert into JwtManagement (createdAt,status,jwt) VALUES (NOW(),'T',?)",
+                jwt
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
+    public int patchJwtStatus(String jwt){
+        this.jdbcTemplate.update("update JwtManagement set status='F',updatedAt=now() where jwt=?",
+                jwt
+        );
+        return 1;
+    }
+
+
+    public int checkJwt(String jwt){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select status from JwtManagement\n" +
+                        "where jwt=? and status='F') as exist",
+                int.class,
+                jwt);
+    }
+
+
+
 }

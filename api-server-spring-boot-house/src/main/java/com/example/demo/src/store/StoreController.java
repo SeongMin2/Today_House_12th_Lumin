@@ -42,6 +42,9 @@ public class StoreController {
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
             }
+            else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
+            }
 
             else{
                 int userIdx=jwtService.getUserIdx();
@@ -61,6 +64,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -82,6 +87,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -96,37 +103,14 @@ public class StoreController {
     }
 
 
-
-
-/*
-    @ResponseBody
-    @GetMapping("/product/{productIdx}/review")
-    public BaseResponse<List<GetMoreReviewRes>> getMoreReview(@PathVariable("productIdx")int productIdx,@RequestParam(required = false) String order) throws BaseException {
-        try{
-            if(jwtService.getJwt()==null){
-                return new BaseResponse<>(EMPTY_JWT);
-            }
-
-            else{
-                if(order==null){
-                    order="helpful";
-                }
-                int userIdx=jwtService.getUserIdx();
-                List<GetMoreReviewRes> getMoreReviewRes = storeProvider.getMoreReview(userIdx,productIdx,order);
-                return new BaseResponse<>(getMoreReviewRes);
-            }
-
-        }catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    } */
-
     @ResponseBody
     @GetMapping("/product/{productIdx}/review")
     public BaseResponse<GetStoreMoreReviewFinal> getMoreReviewFinal(@PathVariable("productIdx")int productIdx,@RequestParam(required = false) String order) throws BaseException {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -152,6 +136,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -174,6 +160,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -197,6 +185,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -219,6 +209,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -240,6 +232,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -263,6 +257,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -284,6 +280,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -306,6 +304,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -328,6 +328,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -358,6 +360,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -381,6 +385,8 @@ public class StoreController {
         try{
             if(jwtService.getJwt()==null){
                 return new BaseResponse<>(EMPTY_JWT);
+            }else if(storeProvider.checkJwt(jwtService.getJwt())==1){
+                return new BaseResponse<>(INVALID_JWT);
             }
 
             else{
@@ -394,19 +400,6 @@ public class StoreController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

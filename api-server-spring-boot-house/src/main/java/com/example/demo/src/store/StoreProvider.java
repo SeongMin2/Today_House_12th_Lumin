@@ -286,6 +286,11 @@ public class StoreProvider {
     }
 
 
+    public int checkJwt(String jwt){
+        int exist = storeDao.checkJwt(jwt);
+        return exist;
+    }
+
 
 
 }

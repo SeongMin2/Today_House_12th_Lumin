@@ -10,5 +10,5 @@ public class Amount {
     private String tax_free;
     private String vat;
     private String point;
-    private String discount;
+    //private String discount;
 }

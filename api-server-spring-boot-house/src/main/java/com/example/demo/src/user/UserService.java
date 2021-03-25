@@ -97,6 +97,7 @@ public class UserService {
 
         //jwt발급
         String jwt = jwtService.createJwt(userIdx);
+        int jwtIdx = userDao.postJwt(jwt);
 
         return new PostUserLoginRes(jwt,userIdx,name);
     }
@@ -106,6 +107,8 @@ public class UserService {
     public PatchUserLogoutRes patchLogout(int userIdx) throws BaseException {
         if(userProvider.checkLog(userIdx).equals("I")){
             PatchUserLogoutRes patchUserLogoutRes = userDao.patchLogout(userIdx);
+            int jwtIdx = userDao.patchJwtStatus(jwtService.getJwt());
+
             return patchUserLogoutRes;
         }
         else{

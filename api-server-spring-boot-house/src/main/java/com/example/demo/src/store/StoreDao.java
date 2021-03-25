@@ -1120,6 +1120,14 @@ public class StoreDao {
     }
 
 
+    public int checkJwt(String jwt){
+        return this.jdbcTemplate.queryForObject("select EXISTS(select status from JwtManagement\n" +
+                        "where jwt=? and status='F') as exist",
+                int.class,
+                jwt);
+    }
+
+
 
 
 }
