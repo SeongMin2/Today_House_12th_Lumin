@@ -116,4 +116,22 @@ public class UserProvider {
     }
 
 
+    public char checkKakaoSocial(String emailId){
+        char kakaoStatus = userDao.checkKakaoSocial(emailId);
+        return kakaoStatus;
+    }
+
+
+    public PostUserLoginRes socialLogin(String emailId){
+        int userIdx = userDao.getUserIdxByEmail(emailId);
+        String name = userDao.getUserNameByEmail(emailId);
+
+        String jwt = jwtService.createJwt(userIdx);
+        PostUserLoginRes postUserLoginRes =new PostUserLoginRes(jwt,userIdx,name);
+
+        return postUserLoginRes;
+
+    }
+
+
 }

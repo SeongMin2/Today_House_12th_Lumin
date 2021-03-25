@@ -50,6 +50,8 @@ public enum BaseResponseStatus {
     FAIL_DELETE_COMMENT(false,2036,"존재하지 않는 댓글입니다."),
     NOT_REQUIRED_OPTION(false,2037,"필수 옵션을 모두 선택하지 않았습니다."),
     INVALID_OPTION_REQUEST(false, 2038,"잘못된 옵션 요청입니다."),
+    EMPTY_ACCESS_TOKEN(false,2039,"ACCESS TOKEN을 입력해주세요"),
+    INVALID_ACCESS_TOKEN(false,2040,"잘못된 Access Token입니다."),
 
 
 

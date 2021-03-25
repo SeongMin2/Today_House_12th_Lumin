@@ -134,4 +134,31 @@ public class UserDao {
 
 
 
+    public char checkKakaoSocial(String emailId){
+        return this.jdbcTemplate.queryForObject("select Case when kakaoSocial is null then 'F'\n" +
+                        "        else kakaoSocial end as kakaoSocial from User\n" +
+                        "where emailId=?",
+                char.class,
+                emailId);
+    }
+
+
+
+    public int getUserIdxByEmail(String emailId){
+        return this.jdbcTemplate.queryForObject("select idx from User\n" +
+                        "where emailId=?",
+                int.class,
+                emailId);
+    }
+
+
+    public String getUserNameByEmail(String emailId){
+        return this.jdbcTemplate.queryForObject("select name from User\n" +
+                        "where emailId=?",
+                String.class,
+                emailId);
+    }
+
+
+
 }

@@ -49,9 +49,9 @@ dependencies {
 
     implementation('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
-
-
-
+     
+    // JSONParser
+    implementation files('luminLib/json-simple-1.1.1.jar')
 
 
 }
