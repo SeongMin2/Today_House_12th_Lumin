@@ -1054,14 +1054,18 @@ public class StoreDao {
 
     public PostImmediatePRes getPaymentProductInfo(int detailIdx){
         DecimalFormat formatter = new DecimalFormat("###,###");
-        return this.jdbcTemplate.queryForObject("select productIdx,Product.name as productName,ProductOption.name,required,price, OptionContent.name as optionName from ProductOption\n" +
+        return this.jdbcTemplate.queryForObject("select ProductOption.productIdx,imgUrl ,Product.name as productName,ProductOption.name as optionName,required,price, OptionContent.name from ProductOption\n" +
                         "inner join OptionContent\n" +
                         "on ProductOption.idx=OptionContent.optionIdx\n" +
                         "inner join Product\n" +
                         "on Product.idx=ProductOption.productIdx\n" +
-                        "where OptionContent.idx=?",  // queryForObject는 하나만 반환할 때 사용
+                        "inner join ProductImg\n" +
+                        "on ProductImg.productIdx=Product.idx\n" +
+                        "where OptionContent.idx=?\n" +
+                        "group by productIdx",  // queryForObject는 하나만 반환할 때 사용
                 (rs, rowNum) -> new PostImmediatePRes(
                         rs.getInt("productIdx"),
+                        rs.getString("imgUrl"),
                         rs.getString("productName"),
                         rs.getString("optionName"),
                         rs.getString("required"),

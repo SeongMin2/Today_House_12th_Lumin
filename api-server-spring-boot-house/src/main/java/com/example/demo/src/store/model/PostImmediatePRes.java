@@ -11,13 +11,15 @@ import java.text.DecimalFormat;
 
 public class PostImmediatePRes {
     private int productIdx;
+    private String productImgUrl;
     private String productName;
     private String optionName;
     private String required;
     private String price;
     private int priceForCalculate;
-    public PostImmediatePRes(int productIdx,String productName,String optionName,String required,String price, int priceForCalculate,String name){
+    public PostImmediatePRes(int productIdx,String productImgUrl,String productName,String optionName,String required,String price, int priceForCalculate,String name){
         this.productIdx=productIdx;
+        this.productImgUrl=productImgUrl;
         this.productName=productName;
         this.optionName = name+": "+optionName;
         this.required=required;

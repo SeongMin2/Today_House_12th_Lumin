@@ -129,19 +129,22 @@ public class StoreProvider {
                 List<GetProductOptionRes> getProductOptionRes = storeDao.getProductOption(productIdx);
 
                 List<GetProductOptionDetailRes> getProductOptionDetailRes = storeDao.getProductOptionDetail(productIdx);
-                GetProductOptionDetailRes zero = new GetProductOptionDetailRes(0,0,0,"선택안함",0,"0","F");
+                GetProductOptionDetailRes zero = new GetProductOptionDetailRes(0,0,0,"선택안함",0,"0원","F");
 
                 for (int i = 0; i < getProductOptionRes.size(); i++) {
                     int h = 0;
-                    getProductOptionRes.get(i).getOptionDetail().add(zero);
+                    //getProductOptionRes.get(i).getOptionDetail().add(zero);
                     for (int k = 0; k < getProductOptionDetailRes.size(); k++) {
                         if (getProductOptionRes.get(i).getOptionIdx() == getProductOptionDetailRes.get(k).getOptionIdx()) {
 
                             getProductOptionRes.get(i).getOptionDetail().add(getProductOptionDetailRes.get(k));
 
-                            if (getProductOptionRes.get(i).getOptionDetail().get(h).getPrice().equals("0")) {
-
-                                getProductOptionRes.get(i).getOptionDetail().get(h).setPrice(minnPrice + "원~" + maxxPrice + "원");
+                            if (getProductOptionRes.get(i).getOptionDetail().get(h).getPriceForCalculate()==0) {
+                          //      if(getProductOptionRes.get(i).getOptionDetail().get(h).getOptionIdx()==0){
+                          //          getProductOptionRes.get(i).getOptionDetail().get(h).setPrice("0원");
+                          //      }else{
+                                    getProductOptionRes.get(i).getOptionDetail().get(h).setPrice(minnPrice + "원~" + maxxPrice + "원");
+                          //      }
 
                             } else {
                                 getProductOptionRes.get(i).getOptionDetail().get(h).setPrice(getProductOptionDetailRes.get(k).getPrice() + "원");
@@ -152,6 +155,10 @@ public class StoreProvider {
                     }
 
                 }
+                for (int i = 0; i < getProductOptionRes.size(); i++) {
+                    getProductOptionRes.get(i).getOptionDetail().add(0,zero);
+                }
+
 
                 getProductOptionFinalRes.setOption(getProductOptionRes);
             }
