@@ -273,6 +273,11 @@ public class StoreProvider {
         }
     }
 
+    public int getPoint(int userIdx){
+        int point = storeDao.getPoint(userIdx);
+        return point;
+    }
+
 
 
 

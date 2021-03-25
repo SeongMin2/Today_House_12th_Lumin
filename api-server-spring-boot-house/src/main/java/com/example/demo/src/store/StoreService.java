@@ -18,6 +18,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.demo.config.BaseResponseStatus.*;
 
 // Service Create, Update, Delete 의 로직 처리
@@ -127,6 +130,108 @@ public class StoreService {
         }
 
     }
+
+
+    public List<PostImmediatePRes> getPurchaseInfo(PostImmediatePReq postImmediatePReq,int productIdx,int userIdx) throws BaseException{
+        if(storeDao.checkProduct(productIdx)!=1){
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        }else {
+            GetProductOptionFinalRes forcheck = storeProvider.getProductOption(productIdx);
+            int numOfRequired = 0;
+            int numOfSelective = 0;
+            List<Integer> requiredOptionIdx = new ArrayList<>();
+
+            for (int i = 0; i < forcheck.getOption().size(); i++) {
+                if (forcheck.getOption().get(i).getRequired().equals("T")) {
+                    numOfRequired++;
+                    requiredOptionIdx.add(forcheck.getOption().get(i).getOptionIdx());
+                } else {
+                    numOfSelective++;
+                }
+            }
+
+            int a = 0;
+            List<Integer> nowOption = new ArrayList<>();
+            for (int i = 0; i < postImmediatePReq.getOptionIdx().size(); i++) {
+
+                for (int k = 0; k < forcheck.getOption().size(); k++) {  // option 주제 들
+                    for (int j = 1; j < forcheck.getOption().get(k).getOptionDetail().size(); j++) { // 옵션주제 내부의 옵션들
+                        System.out.println("가져온값"+postImmediatePReq.getOptionIdx().get(i));
+                        System.out.println("비교값"+forcheck.getOption().get(k).getOptionDetail().get(j).getDetailidx());
+                        if (postImmediatePReq.getOptionIdx().get(i) == forcheck.getOption().get(k).getOptionDetail().get(j).getDetailidx() && forcheck.getOption().get(k).getRequired().equals("T")) {
+
+                            nowOption.add(forcheck.getOption().get(k).getOptionIdx());
+
+                        } else if (postImmediatePReq.getOptionIdx().get(i) == forcheck.getOption().get(k).getOptionDetail().get(j).getDetailidx() && forcheck.getOption().get(k).getRequired().equals("F")) {
+                            a++;
+                        }
+                    }
+                }
+            }
+            System.out.println("nowoption길이"+nowOption.size());
+            System.out.println("a값:"+a);
+            int b = 0;
+            for (int i = 0; i < nowOption.size() - 1; i++) {
+                if (nowOption.get(i) != nowOption.get(i + 1)) {
+                    b++;
+                }
+            }
+
+            List<PostImmediatePRes> finalResult = new ArrayList<>();
+            String options="·";
+
+            if(nowOption.size()!=numOfRequired){
+                throw new BaseException(NOT_REQUIRED_OPTION);
+            }
+            else if(postImmediatePReq.getOptionIdx().size()>numOfRequired+numOfSelective || postImmediatePReq.getOptionIdx().size()<=0){
+                throw new BaseException(INVALID_OPTION_REQUEST);
+            }
+            else if(postImmediatePReq.getOptionIdx().size()!=nowOption.size()+a){
+                throw new BaseException(INVALID_OPTION_REQUEST);
+            }
+
+            else if(a<=numOfSelective && b==numOfRequired-1){
+                for(int f=0;f<postImmediatePReq.getOptionIdx().size();f++){
+                    PostImmediatePRes postImmediatePRes = storeDao.getPaymentProductInfo(postImmediatePReq.getOptionIdx().get(f));
+
+                    finalResult.add(postImmediatePRes);
+                    if(finalResult.get(f).getPriceForCalculate()==0){
+                        options=options+finalResult.get(f).getOptionName()+" / ";
+                    }else{
+                        options=options+finalResult.get(f).getOptionName();
+                    }
+
+                }
+                System.out.println(options);
+                if(a==0){
+                    finalResult.get(finalResult.size()-1).setOptionName(options);
+                }
+                else{
+                    finalResult.get(finalResult.size()-1-a).setOptionName(options);
+                }
+                for(int l=0;l<finalResult.size();l++){
+                    if(finalResult.get(l).getPriceForCalculate()==0){
+                        finalResult.remove(l);
+                    }
+                }
+
+
+
+                return finalResult;
+
+            }
+            else{
+                throw new BaseException(INVALID_OPTION_REQUEST);
+            }
+
+        }
+
+
+
+        }
+
+
+
 
 
 

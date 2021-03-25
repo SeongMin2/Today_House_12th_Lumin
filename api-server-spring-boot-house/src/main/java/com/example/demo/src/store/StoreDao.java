@@ -1041,6 +1041,44 @@ public class StoreDao {
     }
 
 
+    public int getRequiredNum(int productIdx){
+        return this.jdbcTemplate.queryForObject("select COUNT(Case when ProductOption.required='T' then 1 end) as numOfRequired from ProductOption\n" +
+                "where productIdx=?", int.class, productIdx);
+    }
+
+    public int getSelectiveNum(int productIdx){
+        return this.jdbcTemplate.queryForObject("select COUNT(Case when ProductOption.required='F' then 1 end) as numOfSelective from ProductOption\n" +
+                "where productIdx=?", int.class, productIdx);
+    }
+
+
+    public PostImmediatePRes getPaymentProductInfo(int detailIdx){
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return this.jdbcTemplate.queryForObject("select productIdx,Product.name as productName,ProductOption.name,required,price, OptionContent.name as optionName from ProductOption\n" +
+                        "inner join OptionContent\n" +
+                        "on ProductOption.idx=OptionContent.optionIdx\n" +
+                        "inner join Product\n" +
+                        "on Product.idx=ProductOption.productIdx\n" +
+                        "where OptionContent.idx=?",  // queryForObject는 하나만 반환할 때 사용
+                (rs, rowNum) -> new PostImmediatePRes(
+                        rs.getInt("productIdx"),
+                        rs.getString("productName"),
+                        rs.getString("optionName"),
+                        rs.getString("required"),
+                        formatter.format(rs.getInt("price")),
+                        rs.getInt("price"),
+                        rs.getString("name")
+                ),
+                detailIdx);
+    }
+
+
+    public int getPoint(int userIdx){
+        return this.jdbcTemplate.queryForObject("select point from User\n" +
+                "where idx=?", int.class, userIdx);
+    }
+
+
 
 
 }

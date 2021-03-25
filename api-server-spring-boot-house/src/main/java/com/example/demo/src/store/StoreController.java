@@ -9,6 +9,7 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -254,29 +255,6 @@ public class StoreController {
     }
 
 
-    //아직 안한 놈 결제 부분
-/*
-    @ResponseBody
-    @PostMapping("/product/{productIdx}/immediate-purchase")
-    public BaseResponse<PostReviewRes> getPayment(@RequestBody PostReviewReq postReviewReq,@PathVariable("productIdx")int productIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
-        try{
-            if(jwtService.getJwt()==null){
-                return new BaseResponse<>(EMPTY_JWT);
-            }
-
-            else{
-                int userIdx=jwtService.getUserIdx();
-                PostReviewRes postReviewRes = storeService.createReview(postReviewReq,productIdx,userIdx);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
-                return new BaseResponse<>(postReviewRes);
-            }
-
-        }catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-
-    } */
-
-
 
 
     @ResponseBody
@@ -339,6 +317,34 @@ public class StoreController {
         }catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    //아직 안한 놈 결제 부분
+
+    @ResponseBody
+    @PostMapping("/product/{productIdx}/immediate-purchase")
+    public BaseResponse<PostImmediateFinalRes> getPayment(@RequestBody PostImmediatePReq postImmediatePReq,@PathVariable("productIdx")int productIdx ) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                List<PostImmediatePRes> postImmediatePRes = storeService.getPurchaseInfo(postImmediatePReq,productIdx,userIdx);
+                int pointForCalcualte = storeProvider.getPoint(userIdx);
+                String point = formatter.format(pointForCalcualte)+" P";
+
+                PostImmediateFinalRes postImmediateFinalRes = new PostImmediateFinalRes(postImmediatePRes,point,pointForCalcualte);
+
+                return new BaseResponse<>(postImmediateFinalRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 
 

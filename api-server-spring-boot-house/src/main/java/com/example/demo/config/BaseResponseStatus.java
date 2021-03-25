@@ -48,6 +48,8 @@ public enum BaseResponseStatus {
     NON_EXISTENT_COUPON(false,2034,"유효하지 않는 쿠폰입니다."),
     ALREADY_ISSUED_COUPON(false,2035,"이미 발급된 쿠폰입니다."),
     FAIL_DELETE_COMMENT(false,2036,"존재하지 않는 댓글입니다."),
+    NOT_REQUIRED_OPTION(false,2037,"필수 옵션을 모두 선택하지 않았습니다."),
+    INVALID_OPTION_REQUEST(false, 2038,"잘못된 옵션 요청입니다."),
 
 
 
