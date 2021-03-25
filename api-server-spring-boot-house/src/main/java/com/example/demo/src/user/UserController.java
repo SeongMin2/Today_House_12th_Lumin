@@ -14,11 +14,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
@@ -204,6 +215,7 @@ public class UserController {
 
 
 
+
     @ResponseBody
     @PatchMapping ("/logout")
     public BaseResponse<PatchUserLogoutRes> logoutUser() throws BaseException{
@@ -352,6 +364,8 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
 
 
 

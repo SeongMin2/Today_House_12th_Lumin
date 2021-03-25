@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -75,7 +76,7 @@ public class UserService {
     }
 
 
-
+    @Transactional
     public PostUserLoginRes loginUser(PostUserLoginReq postUserLoginReq) throws BaseException {
         //System.out.println("테스트1:"+postUserLoginReq.getEmailId());
 
@@ -139,7 +140,7 @@ public class UserService {
 
 
 
-
+    @Transactional
     public PostKakaoUserRes createKakaoUser (PostKakaoUserReq postKakaoUserReq) throws BaseException{
         if(userProvider.checkKakaoEmailId(postKakaoUserReq.getEmailId()) ==1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);

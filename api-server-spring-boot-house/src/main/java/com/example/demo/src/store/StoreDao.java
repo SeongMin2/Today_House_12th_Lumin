@@ -1084,5 +1084,42 @@ public class StoreDao {
 
 
 
+    public int postOrders(PostKakaoPayReadyReq postKakaoPayReadyReq,int userIdx){
+        this.jdbcTemplate.update("insert into Orders (userIdx,createdAt,status,orderer,ordererEmail,phoneNum,receiver,\n" +
+                        "                    receiverPhoneNum,address,payment,totalPrice,number) VALUES (?,now(),'F',?,?,?,?,?,?,?,?,?)",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                userIdx,postKakaoPayReadyReq.getOrderer(),postKakaoPayReadyReq.getOrdererEmail(),postKakaoPayReadyReq.getOrdererPhoneNum(),
+                postKakaoPayReadyReq.getReceiver(),postKakaoPayReadyReq.getReceiverPhoneNum(),postKakaoPayReadyReq.getAddress(),
+                postKakaoPayReadyReq.getPayment(),postKakaoPayReadyReq.getTotalPrice(),postKakaoPayReadyReq.getNumber());
+
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int postOrderProduct(int detailOption,int orderIdx){
+        this.jdbcTemplate.update("insert into OrderProduct (orderIdx,detailIdx,createdAt,status) VALUES (?,?,now(),'T')",  // insert,update,delete 부분은 다 update를 사용하면 됨
+                orderIdx,detailOption);
+
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public String getProductName(int productIdx){
+        return this.jdbcTemplate.queryForObject("select name from Product\n" +
+                "where idx=?", String.class, productIdx);
+    }
+
+    public String getUserName(int userIdx){
+        return this.jdbcTemplate.queryForObject("select name from User\n" +
+                "where idx=?", String.class, userIdx);
+    }
+
+
+    public int patchOrderStatus(int orderIdx,PostKakaoPayConfirmReq postKakaoPayConfirmReq){
+        this.jdbcTemplate.update("update Orders set status='T',tid=? where idx=?",
+                postKakaoPayConfirmReq.getTid(),orderIdx
+        );
+        return orderIdx;
+    }
+
+
+
 
 }

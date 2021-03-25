@@ -1,6 +1,7 @@
 package com.example.demo.src.store;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
 import com.example.demo.config.secret.Secret;
 import com.example.demo.src.store.model.PatchHelpfulRes;
 import com.example.demo.src.store.model.PostReviewRes;
@@ -13,11 +14,19 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -226,9 +235,106 @@ public class StoreService {
 
         }
 
+    }
 
 
+    public GetKakaoPayReadyRes kakaoPay(PostKakaoPayReadyReq postKakaoPayReadyReq,int userIdx, int productIdx) throws BaseException {
+        if (storeDao.checkProduct(productIdx) != 1) {
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        } else {
+            int orderIdx = storeDao.postOrders(postKakaoPayReadyReq, userIdx);
+            for (int i = 0; i < postKakaoPayReadyReq.getDetailOption().size(); i++) {
+                int a = storeDao.postOrderProduct(postKakaoPayReadyReq.getDetailOption().get(i), orderIdx);
+            }
+            String productName = storeDao.getProductName(productIdx);
+            String userName = storeDao.getUserName(userIdx);
+
+
+            String HOST = "https://kapi.kakao.com";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "KakaoAK " + "f57245abbbc2a593e17e09074aa5f3dd");
+            headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+            // 서버로 요청할 Body
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("cid", "TC0ONETIME");     // 받아야함
+            body.add("partner_order_id", orderIdx+"");
+            body.add("partner_user_id", userName);
+            body.add("item_name", productName);
+            body.add("quantity", postKakaoPayReadyReq.getNumber());
+            body.add("total_amount", postKakaoPayReadyReq.getTotalPrice());
+            body.add("tax_free_amount", "0");
+            body.add("approval_url", "https://www.naver.com");
+            body.add("cancel_url", "https://luminitworld.tistory.com/97");
+            body.add("fail_url", "https://www.daum.net");
+
+            HttpEntity<MultiValueMap<String, String>> requestParam = new HttpEntity<>(body, headers);
+
+            try {
+                GetKakaoPayReadyRes getKakaoPayReadyRes = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), requestParam, GetKakaoPayReadyRes.class);
+                getKakaoPayReadyRes.setOrderIdx(orderIdx);
+                return getKakaoPayReadyRes;
+
+            } catch (RestClientException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            return null;
         }
+    }
+
+
+
+    public PostKakaoPayConfirmRes kakaoPayConfirm(PostKakaoPayConfirmReq postKakaoPayConfirmReq,int userIdx,int productIdx) throws BaseException {
+        if (storeDao.checkProduct(productIdx) != 1) {
+            throw new BaseException(NON_EXISTENT_PRODUCT);
+        } else{
+            String userName = storeDao.getUserName(userIdx);
+
+            String HOST = "https://kapi.kakao.com";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "KakaoAK " + "f57245abbbc2a593e17e09074aa5f3dd");
+            headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+            // 서버로 요청할 Body
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("cid", "TC0ONETIME");
+            body.add("tid",postKakaoPayConfirmReq.getTid());
+            body.add("partner_order_id", postKakaoPayConfirmReq.getOrderIdx()+"");
+            body.add("partner_user_id", userName);
+            body.add("pg_token", postKakaoPayConfirmReq.getPg_token());
+
+
+            HttpEntity<MultiValueMap<String, String>> requestParam = new HttpEntity<>(body, headers);
+
+            try {
+                PostKakaoPayConfirmRes postKakaoPayConfirmRes = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), requestParam, PostKakaoPayConfirmRes.class);
+                int orderIdx = storeDao.patchOrderStatus(postKakaoPayConfirmReq.getOrderIdx(),postKakaoPayConfirmReq);
+                return postKakaoPayConfirmRes;
+
+            } catch (RestClientException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+
+
+            return null;
+        }
+    }
 
 
 

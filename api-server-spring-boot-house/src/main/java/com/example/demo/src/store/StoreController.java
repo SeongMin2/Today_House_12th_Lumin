@@ -350,6 +350,58 @@ public class StoreController {
 
 
 
+    @ResponseBody
+    @PostMapping("/product/{productIdx}/kakao/pay") //이렇게 따로 path variable이 들어가 있음// (GET) 127.0.0.1:9000/app/users/:userIdx //이렇게 /app/users뒤에 이어서 /:userIdx설정
+    // node.js 같은경우는 path-variable할 때 :userIdx 이런식으로 해주는게 맞으나 Spring-boot같은 경우는 인식을 못하므로 {userIdx}로 해줍니다.
+    public BaseResponse<GetKakaoPayReadyRes> kakaoPay(@RequestBody PostKakaoPayReadyReq postKakaoPayReadyReq,@PathVariable("productIdx")int productIdx) throws Exception {
+
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                GetKakaoPayReadyRes getKakaoPayReadyRes = storeService.kakaoPay(postKakaoPayReadyReq,userIdx,productIdx);
+
+                return new BaseResponse<>(getKakaoPayReadyRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+
+
+    @ResponseBody
+    @PostMapping("/product/{productIdx}/kakao/pay-confirm")
+    public BaseResponse<PostKakaoPayConfirmRes> kakaoPayConfirm(@RequestBody PostKakaoPayConfirmReq postKakaoPayConfirmReq, @PathVariable("productIdx")int productIdx) throws Exception{
+        try{
+            if(jwtService.getJwt()==null){
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else{
+                int userIdx=jwtService.getUserIdx();
+                PostKakaoPayConfirmRes postKakaoPayConfirmRes = storeService.kakaoPayConfirm(postKakaoPayConfirmReq,userIdx,productIdx);
+
+                return new BaseResponse<>(postKakaoPayConfirmRes);
+            }
+
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 
