@@ -111,6 +111,19 @@ public class UserService {
         }
     }
 
+    public PostKakaoUserRes createKakaoUser (PostKakaoUserReq postKakaoUserReq) throws BaseException{
+        if(userProvider.checkEmailId(postKakaoUserReq.getEmailId()) ==1){
+            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+
+        }else{
+            int userIdx = userDao.createKakaoUser(postKakaoUserReq);
+            //jwt발급
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostKakaoUserRes(userIdx,jwt);
+
+        }
+    }
+
 
 
 }

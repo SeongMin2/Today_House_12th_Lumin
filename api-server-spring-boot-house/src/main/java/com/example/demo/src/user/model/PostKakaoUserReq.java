@@ -8,4 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PostKakaoUserReq {
+    private String emailId;
+    private String nickName;
 }

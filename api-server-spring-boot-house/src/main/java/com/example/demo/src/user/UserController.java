@@ -324,26 +324,26 @@ public class UserController {
     }
 
 
-/*
+
 
     @ResponseBody
     @PostMapping("/kakao") //마찬가지로 아무것도 없는 것은 post방식으로 /app/users 를 사용하겠다는 의미
-    public BaseResponse<PostKakaoUserRes> createKakaoUser(@RequestBody PostKakaoUserReq postUserLoginReq) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
-        if(postUserLoginReq.getEmailId() == null){   //validation처리
+    public BaseResponse<PostKakaoUserRes> createKakaoUser(@RequestBody PostKakaoUserReq postKakaoUserReq) throws BaseException {  // json으로 받아오는데 알아서 객체가 되어 받아짐 -> PostUserReq를 보면 받아올 것에 대한 객체가 구성되어 있고
+        if(postKakaoUserReq.getEmailId() == null){   //validation처리
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현     // 이건 5주차 skip
-        if(!isRegexEmail(postUserLoginReq.getEmailId())){   // 형식적 validation
+        if(!isRegexEmail(postKakaoUserReq.getEmailId())){   // 형식적 validation
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
         try{
-            PostUserLoginRes postUserLoginRes = userService.loginUser(postUserLoginReq);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
-            return new BaseResponse<>(postUserLoginRes);
+            PostKakaoUserRes postKakaoUserRes = userService.createKakaoUser(postKakaoUserReq);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
+            return new BaseResponse<>(postKakaoUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-*/
+
 
 
 

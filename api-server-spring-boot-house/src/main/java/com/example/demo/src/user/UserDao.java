@@ -160,5 +160,13 @@ public class UserDao {
     }
 
 
+    public int createKakaoUser(PostKakaoUserReq postKakaoUserReq){
+        this.jdbcTemplate.update("insert into User (createdAt, name, emailId, pw, mandatoryConsent,optionalConsent,kakaoSocial) VALUES (NOW(),?,?,'kakaoUser','F','F','T')",
+                new Object[]{postKakaoUserReq.getNickName(),postKakaoUserReq.getEmailId(),}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
 
 }
