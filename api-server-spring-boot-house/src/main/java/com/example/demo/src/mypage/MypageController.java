@@ -52,5 +52,39 @@ public class MypageController {
         }
 
     }
+    @ResponseBody
+    @GetMapping("/scrapbook")
+    public BaseResponse<GetScrapBookRes> getScrapBook() throws BaseException {
+        try {
+            if (jwtService.getJwt() == null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            } else {
+                int userIdx = jwtService.getUserIdx();
+                GetScrapBookRes getScrapBookRes = mypageProvider.getScrapBook(userIdx);
+                return new BaseResponse<>(getScrapBookRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+    @ResponseBody
+    @GetMapping("/heart")
+    public BaseResponse<GetHeartBookRes> getHeartBook() throws BaseException {
+        try {
+            if (jwtService.getJwt() == null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            } else {
+                int userIdx = jwtService.getUserIdx();
+                GetHeartBookRes getHeartBookRes = mypageProvider.getHeartBook(userIdx);
+                return new BaseResponse<>(getHeartBookRes);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 
 }

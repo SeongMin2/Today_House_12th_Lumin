@@ -11,7 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetPictureDetailRes {
-    private String pictureUrl;
-    private String place;
+public class GetHeartPictureRes {
+    private int heartIdx;
+    private int pictureIdx;
+    private String thumbnailImageUrl;
 }

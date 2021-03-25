@@ -11,7 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetPictureDetailRes {
-    private String pictureUrl;
-    private String place;
+public class GetScrapPictureRes {
+    private int scrapIdx;
+    private int picturepostIdx;
+    private String thumbnailImageUrl;
+    private String comment;
 }

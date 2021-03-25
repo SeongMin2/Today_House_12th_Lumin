@@ -62,4 +62,85 @@ public class MypageDao {
                 "where userIdx = ?",int.class,userIdx);
     }
 
+    public List<GetScrapPictureRes> getScrapPicture(int userIdx){
+        return this.jdbcTemplate.query("select Scrap.idx as scrapIdx,PicturePost.idx as picturepostIdx,P.pictureUrl as thumbnailImageUrl ,PicturePost.comment as comment\n" +
+                        "    from Scrap\n" +
+                        "    inner join PicturePost on PicturePost.evalableIdx=Scrap.evalableIdx and PicturePost.Idx=Scrap.contentIdx\n" +
+                        "    inner join Pictures P on PicturePost.idx = P.picturepostIdx\n" +
+                        "    where Scrap.userIdx = ? and Scrap.status='T' GROUP BY scrapIdx",
+                (rs, rowNum) -> new GetScrapPictureRes(
+                        rs.getInt("scrapIdx"),
+                        rs.getInt("picturepostIdx"),
+                        rs.getString("thumbnailImageUrl"),
+                        rs.getString("comment")),
+                userIdx);
+    }
+    public List<GetScrapHWRes> getScrapHW(int userIdx){
+        return this.jdbcTemplate.query("select Scrap.idx as scrapIdx,Housewarming.idx as HWIdx,Housewarming.thumbnailImageUrl,Housewarming.name as title,U.name as userName from Scrap\n" +
+                        "inner join Housewarming on Housewarming.evalableIdx=Scrap.evalableIdx and Housewarming.Idx=Scrap.contentIdx\n" +
+                        "inner join User U on Housewarming.useridx = U.idx\n" +
+                        "where Scrap.userIdx = ? and Scrap.status='T' GROUP BY scrapIdx",
+                (rs, rowNum) -> new GetScrapHWRes(
+                        rs.getInt("scrapIdx"),
+                        rs.getInt("HWIdx"),
+                        rs.getString("thumbnailImageUrl"),
+                        rs.getString("title"),
+                        rs.getString("userName")),
+                userIdx);
+    }
+
+    public int getHWCount(int userIdx){
+        return this.jdbcTemplate.queryForObject("select (select count(idx)) as scrapHWCount from Scrap where userIdx = ?" +
+                " and evalableIdx=1 and Scrap.status='T'",int.class,userIdx);
+    }
+    public int getPictureCount(int userIdx){
+        return this.jdbcTemplate.queryForObject("select (select count(idx)) as scrapPictureCount from Scrap where userIdx = ? and evalableIdx=3 and Scrap.status='T'\n",int.class,userIdx);
+    }
+
+    public int getHWHeartCount(int userIdx){
+        return this.jdbcTemplate.queryForObject("select (select count(idx)) as heartHWCount\n" +
+                "from Heart\n" +
+                "where userIdx = ?\n" +
+                "  and evalableIdx = 1\n" +
+                "  and Heart.status = 'T'",int.class,userIdx);
+    }
+    public int getPictureHeartCount(int userIdx){
+        return this.jdbcTemplate.queryForObject("select (select count(idx)) as heartHWCount\n" +
+                "from Heart\n" +
+                "where userIdx = ?\n" +
+                "  and evalableIdx = 3\n" +
+                "  and Heart.status = 'T'",int.class,userIdx);
+    }
+
+    public List<GetHeartHWRes> getHeartHW(int userIdx){
+        return this.jdbcTemplate.query("select Heart.idx as heartIdx,Housewarming.idx as HWIdx,Housewarming.thumbnailImageUrl,Housewarming.name as title,U.name as userName from Heart\n" +
+                        "inner join Housewarming on Housewarming.evalableIdx=Heart.evalableIdx and Housewarming.Idx=Heart.contentIdx\n" +
+                        "inner join User U on Housewarming.useridx = U.idx\n" +
+                        "where Heart.userIdx = ? and Heart.status='T' GROUP BY heartIdx",
+                (rs, rowNum) -> new GetHeartHWRes(
+                        rs.getInt("heartIdx"),
+                        rs.getInt("HWIdx"),
+                        rs.getString("thumbnailImageUrl"),
+                        rs.getString("title"),
+                        rs.getString("userName")),
+                userIdx);
+    }
+    public List<GetHeartPictureRes> getHeartPicture(int userIdx){
+        return this.jdbcTemplate.query("select Heart.idx           as heartIdx,\n" +
+                        "       PicturePost.idx     as picturepostIdx,\n" +
+                        "       P.pictureUrl        as thumbnailImageUrl from Heart\n" +
+                        "         inner join PicturePost on PicturePost.evalableIdx = Heart.evalableIdx and PicturePost.Idx = Heart.contentIdx\n" +
+                        "         inner join Pictures P on PicturePost.idx = P.picturepostIdx\n" +
+                        "where Heart.userIdx = ?\n" +
+                        "  and Heart.status = 'T'\n" +
+                        "GROUP BY heartIdx\n",
+                (rs, rowNum) -> new GetHeartPictureRes(
+                        rs.getInt("heartIdx"),
+                        rs.getInt("picturepostIdx"),
+                        rs.getString("thumbnailImageUrl")),
+                userIdx);
+    }
+
+
+
 }

@@ -46,4 +46,26 @@ public class MypageProvider {
 
         return getMypageProfileRes;
     }
+
+    public GetScrapBookRes getScrapBook(int userIdx) throws BaseException {
+        List<GetScrapHWRes> getScrapHWRes = mypageDao.getScrapHW(userIdx);
+        List<GetScrapPictureRes> getScrapPictureRes = mypageDao.getScrapPicture(userIdx);
+        int scrapHWCount=mypageDao.getHWCount(userIdx);
+        int scrapPictureCount=mypageDao.getPictureCount(userIdx);
+
+        GetScrapBookRes getScrapBookRes = new GetScrapBookRes(scrapPictureCount,getScrapPictureRes,scrapHWCount,getScrapHWRes);
+
+        return getScrapBookRes;
+    }
+
+    public GetHeartBookRes getHeartBook(int userIdx) throws BaseException {
+        List<GetHeartHWRes> getHeartHWRes = mypageDao.getHeartHW(userIdx);
+        List<GetHeartPictureRes> getHeartPictureRes = mypageDao.getHeartPicture(userIdx);
+        int heartHWCount=mypageDao.getHWHeartCount(userIdx);
+        int heartPictureCount=mypageDao.getPictureHeartCount(userIdx);
+
+        GetHeartBookRes getHeartBookRes = new GetHeartBookRes(heartPictureCount,getHeartPictureRes,heartHWCount,getHeartHWRes);
+
+        return getHeartBookRes;
+    }
 }
