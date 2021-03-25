@@ -52,6 +52,7 @@ public enum BaseResponseStatus {
     INVALID_OPTION_REQUEST(false, 2038,"잘못된 옵션 요청입니다."),
     EMPTY_ACCESS_TOKEN(false,2039,"ACCESS TOKEN을 입력해주세요"),
     INVALID_ACCESS_TOKEN(false,2040,"잘못된 Access Token입니다."),
+    POST_USERS_EMPTY_NICKNAME(false,2041,"닉네임을 입력해주세요"),
 
 
 

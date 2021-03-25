@@ -66,6 +66,13 @@ public class UserDao {
 
     }
 
+    public int checkKakaoEmail(String email){
+        return this.jdbcTemplate.queryForObject("select exists(select emailId from User where emailId = ? and kakaoSocial='T')",
+                int.class,
+                email);
+
+    }
+
 
 
     public PostUserLoginPWRes checkAccount(String email){

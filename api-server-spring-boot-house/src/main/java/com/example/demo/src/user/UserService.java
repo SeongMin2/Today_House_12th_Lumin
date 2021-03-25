@@ -7,6 +7,7 @@ import com.example.demo.config.secret.Secret;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.AES128;
 import com.example.demo.utils.JwtService;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,12 +112,53 @@ public class UserService {
         }
     }
 
+
+    public PostUserLoginRes socialLogin(String emailId) throws BaseException {
+        int userIdx = userDao.getUserIdxByEmail(emailId);
+        //String name = userDao.getUserNameByEmail(emailId);
+        String name;
+        if(userProvider.checkLogExist(userIdx)!=1){  // 신규로 처음 로그인하는 사람을 위한
+            name = userDao.recordLog(userIdx,"I");
+
+        }
+        else{
+            if(userProvider.checkLog(userIdx).equals("I")){
+                throw new BaseException(ALREADY_LOGGED);
+            }
+            name = userDao.recordLog(userIdx,"I");
+
+        }
+
+        String jwt = jwtService.createJwt(userIdx);
+        PostUserLoginRes postUserLoginRes =new PostUserLoginRes(jwt,userIdx,name);
+
+
+        return postUserLoginRes;
+
+    }
+
+
+
+
     public PostKakaoUserRes createKakaoUser (PostKakaoUserReq postKakaoUserReq) throws BaseException{
-        if(userProvider.checkEmailId(postKakaoUserReq.getEmailId()) ==1){
+        if(userProvider.checkKakaoEmailId(postKakaoUserReq.getEmailId()) ==1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
 
         }else{
             int userIdx = userDao.createKakaoUser(postKakaoUserReq);
+            String name;
+            if(userProvider.checkLogExist(userIdx)!=1){  // 신규로 처음 로그인하는 사람을 위한
+                name = userDao.recordLog(userIdx,"I");
+
+            }
+            else{
+                if(userProvider.checkLog(userIdx).equals("I")){
+                    throw new BaseException(ALREADY_LOGGED);
+                }
+                name = userDao.recordLog(userIdx,"I");
+
+            }
+
             //jwt발급
             String jwt = jwtService.createJwt(userIdx);
             return new PostKakaoUserRes(userIdx,jwt);

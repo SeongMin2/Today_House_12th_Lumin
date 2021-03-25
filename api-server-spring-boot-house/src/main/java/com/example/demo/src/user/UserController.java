@@ -294,12 +294,14 @@ public class UserController {
 
                         else if(userProvider.checkEmailId(emailId)==1){   // userProvider.checkEmail도 여기서 재활용 의미적 validation이긴 하지만 재활용이므로 여기서 점검
                             if(userProvider.checkKakaoSocial(emailId)=='T'){  // kakaosocial 로그인 'T'로 되어 있으면 정상로그인
-                                PostUserLoginRes postUserLoginRes = userProvider.socialLogin(emailId);
+                                PostUserLoginRes postUserLoginRes = userService.socialLogin(emailId);
                                 postUserLoginRes.setStatus("카카오 소셜로그인 성공!");
+
+
                                 return new BaseResponse<>(postUserLoginRes);
                             }
                             else if(userProvider.checkKakaoSocial(emailId)=='F'){
-                                PostUserLoginRes postUserLoginRes = userProvider.socialLogin(emailId);
+                                PostUserLoginRes postUserLoginRes = userService.socialLogin(emailId);
                                 postUserLoginRes.setStatus("이미 가입된 로그인입니다. 해당 소셜로그인으로 연동하겠습니까?");
                                 postUserLoginRes.setJwt("0");
                                 return new BaseResponse<>(postUserLoginRes);
@@ -336,8 +338,15 @@ public class UserController {
         if(!isRegexEmail(postKakaoUserReq.getEmailId())){   // 형식적 validation
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+        if(postKakaoUserReq.getNickName()==null){
+            return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
+        }
         try{
             PostKakaoUserRes postKakaoUserRes = userService.createKakaoUser(postKakaoUserReq);  // 조회가 아닌 행위는 service에서 진행하므로 UserService의 객체 userService에서 가져옴, 그래서 위에서 받아서 createUser로 넘김
+
+         //   PostUserLoginReq postUserLoginReq = new PostUserLoginReq(postKakaoUserReq.getEmailId(),"kakaoUser");
+         //   PostUserLoginRes postUserLoginRes = userService.loginUser(postUserLoginReq,1);
+
             return new BaseResponse<>(postKakaoUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

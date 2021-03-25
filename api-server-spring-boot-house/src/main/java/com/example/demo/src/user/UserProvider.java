@@ -62,6 +62,10 @@ public class UserProvider {
         return userDao.checkEmail(email);
     }
 
+    public int checkKakaoEmailId(String email){
+        return userDao.checkKakaoEmail(email);
+    }
+
 
 
     public int checkAccount(String email,String password) throws BaseException {
@@ -121,17 +125,6 @@ public class UserProvider {
         return kakaoStatus;
     }
 
-
-    public PostUserLoginRes socialLogin(String emailId){
-        int userIdx = userDao.getUserIdxByEmail(emailId);
-        String name = userDao.getUserNameByEmail(emailId);
-
-        String jwt = jwtService.createJwt(userIdx);
-        PostUserLoginRes postUserLoginRes =new PostUserLoginRes(jwt,userIdx,name);
-
-        return postUserLoginRes;
-
-    }
 
 
 }
