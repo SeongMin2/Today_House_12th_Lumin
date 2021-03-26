@@ -43,7 +43,7 @@ public class UserDao {
 
 
     public int createUser(PostUserReq postUserReq){
-        this.jdbcTemplate.update("insert into User (createdAt, name, emailId, pw, mandatoryConsent,optionalConsent ) VALUES (NOW(),?,?,?,?,?)",
+        this.jdbcTemplate.update("insert into User (createdAt, name, emailId, pw, mandatoryConsent,optionalConsent,userimageUrl ) VALUES (NOW(),?,?,?,?,?,'F')",
                 new Object[]{postUserReq.getNickName(), postUserReq.getEmailId(), postUserReq.getPassword(), postUserReq.getMandatoryConsent(),postUserReq.getOptionalConsent(),}
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);

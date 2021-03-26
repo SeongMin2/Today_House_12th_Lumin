@@ -26,10 +26,10 @@ public class GetMoreReviewRes {
         this.starPoint=starPoint;
 
         if(fromLocal.equals("T")){
-            this.dayAndStatus= createdAt+"·"+"오늘의집 구매";
+            this.dayAndStatus= createdAt+" · "+"오늘의집 구매";
         }
         else{
-            this.dayAndStatus=createdAt+"·"+"다른 쇼핑몰 구매";
+            this.dayAndStatus=createdAt+" · "+"다른 쇼핑몰 구매";
         }
         this.imgUrl=imgUrl;
         this.content=content;
